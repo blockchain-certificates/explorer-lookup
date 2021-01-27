@@ -1,3 +1,5 @@
-export function lookForTx (): any {
-  return true;
-}
+import lookForTx from './lookForTx';
+
+export {
+  lookForTx
+};
