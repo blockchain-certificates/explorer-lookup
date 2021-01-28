@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { TransactionData } from '../../src/models/TransactionData';
-import { TExplorerAPIs } from '../../src/explorers';
+import * as explorers from '../../src/explorers';
 import { SupportedChains } from '../../src/constants/blockchains';
 import lookForTx from '../../src/lookForTx';
 
@@ -23,7 +23,8 @@ describe('lookForTx test suite', function () {
   describe('given it is invoked with custom explorers with priority 0', function () {
     let stubbedCustomExplorer: sinon.SinonStub;
     let stubbedDefaultExplorer: sinon.SinonStub;
-    let mockExplorers: TExplorerAPIs;
+    let stubbedPrepareExplorerAPIs: sinon.SinonStub;
+    let mockExplorers: explorers.TExplorerAPIs;
 
     beforeEach(function () {
       stubbedCustomExplorer = sinon.stub().resolves(fixtureCustomTxData);
@@ -39,11 +40,13 @@ describe('lookForTx test suite', function () {
           priority: 0
         }]
       };
+      stubbedPrepareExplorerAPIs = sinon.stub(explorers, 'prepareExplorerAPIs').returns(mockExplorers);
     });
 
     afterEach(function () {
       stubbedCustomExplorer.resetHistory();
       stubbedDefaultExplorer.resetHistory();
+      stubbedPrepareExplorerAPIs.restore();
     });
 
     describe('given the custom explorers return the transaction', function () {
@@ -53,7 +56,7 @@ describe('lookForTx test suite', function () {
         response = await lookForTx({
           transactionId: MOCK_TRANSACTION_ID,
           chain: SupportedChains.Bitcoin,
-          explorerAPIs: mockExplorers
+          explorerAPIs: [] // we are mocking at internal function level
         });
       });
 
@@ -78,7 +81,7 @@ describe('lookForTx test suite', function () {
         response = await lookForTx({
           transactionId: MOCK_TRANSACTION_ID,
           chain: SupportedChains.Bitcoin,
-          explorerAPIs: mockExplorers
+          explorerAPIs: [] // we are mocking at internal function level
         });
       });
 
