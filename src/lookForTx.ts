@@ -2,8 +2,8 @@ import { SupportedChains, BLOCKCHAINS } from './constants/blockchains';
 import CONFIG from './constants/config';
 import PromiseProperRace from './helpers/promiseProperRace';
 import { TransactionData } from './models/TransactionData';
-import { TExplorerAPIs } from './explorers';
-import { TExplorerFunctionsArray } from './models/Explorers';
+import { prepareExplorerAPIs, TExplorerAPIs } from './explorers';
+import { ExplorerAPI, TExplorerFunctionsArray } from './models/Explorers';
 
 export function getExplorersByChain (chain: SupportedChains, explorerAPIs: TExplorerAPIs): TExplorerFunctionsArray {
   switch (chain) {
@@ -100,13 +100,13 @@ async function runQueueByIndex (queues, index: number, transactionId, chain): Pr
 }
 
 export default async function lookForTx (
-  { transactionId, chain, explorerAPIs }:
-  { transactionId: string; chain: SupportedChains; explorerAPIs: TExplorerAPIs }
+  { transactionId, chain, explorerAPIs = [] }:
+  { transactionId: string; chain: SupportedChains; explorerAPIs?: ExplorerAPI[] }
 ): Promise<TransactionData> {
-  // Build explorers queue ordered by priority
+  const preparedExplorerAPIs = prepareExplorerAPIs(explorerAPIs);
   const lookupQueues = buildPromiseRacesQueue({
-    defaultAPIs: getExplorersByChain(chain, explorerAPIs),
-    customAPIs: explorerAPIs.custom
+    defaultAPIs: getExplorersByChain(chain, preparedExplorerAPIs),
+    customAPIs: preparedExplorerAPIs.custom
   });
 
   // Run queue
