@@ -99,7 +99,7 @@ async function runQueueByIndex (queues, index: number, transactionId, chain): Pr
   }
 }
 
-export default async function lookForTx (
+export async function lookForTx (
   { transactionId, chain, explorerAPIs = [] }:
   { transactionId: string; chain: SupportedChains; explorerAPIs?: ExplorerAPI[] }
 ): Promise<TransactionData> {

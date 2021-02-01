@@ -5,19 +5,18 @@ import typescript from '@rollup/plugin-typescript';
 import builtins from 'rollup-plugin-node-builtins';
 
 export default {
-  input: 'src/index.ts',
+  input: 'src/lookForTx.ts',
   output: [
     {
       file: 'dist/index.js',
       format: 'cjs',
-      name: 'MerkleProof2019',
-      exports: 'named',
+      name: 'ExplorerLookup',
       sourcemap: true
     },
     {
       file: 'dist/index-es.js',
       format: 'es',
-      name: 'MerkleProof2019',
+      name: 'ExplorerLookup',
       sourcemap: true
     }
   ],
