@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { TransactionData } from '../../src/models/TransactionData';
 import * as explorers from '../../src/explorers';
 import { SupportedChains } from '../../src/constants/blockchains';
-import lookForTx from '../../src/lookForTx';
+import { lookForTx } from '../../src/lookForTx';
 
 describe('lookForTx test suite', function () {
   const MOCK_TRANSACTION_ID = 'mock-transaction-id';
