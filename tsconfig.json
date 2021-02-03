@@ -8,15 +8,17 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "baseUrl": "src",
-    "module": "commonjs",
+    "module": "ES2020",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "outDir": "lib/esm",
+    "declaration": true
   },
   "compileOnSave": false,
   "exclude": [
     "node_modules",
-    "tests"
+    "tests",
+    "lib"
   ]
 }

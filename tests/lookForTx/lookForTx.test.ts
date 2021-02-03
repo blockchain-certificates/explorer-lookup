@@ -3,7 +3,7 @@ import { SupportedChains } from '../../src/constants/blockchains';
 import * as explorers from '../../src/explorers';
 import { TransactionData } from '../../src/models/TransactionData';
 import CONFIG from '../../src/constants/config';
-import { lookForTx, getExplorersByChain } from '../../src/lookForTx';
+import lookForTx, { getExplorersByChain } from '../../src/lookForTx';
 
 describe('lookForTx test suite', function () {
   const MOCK_TRANSACTION_ID = 'mock-transaction-id';
