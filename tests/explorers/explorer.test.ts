@@ -307,7 +307,9 @@ describe('Blockchain Explorers test suite', function () {
         }];
         const expectedExplorers: TExplorerAPIs = getDefaultExplorers();
         expectedExplorers.custom = explorerFactory(fixtureCustomExplorerAPI);
-        expect(() => prepareExplorerAPIs(fixtureCustomExplorerAPI)).toThrow('One or more of your custom explorer APIs has a priority set below zero');
+        expect(() => prepareExplorerAPIs(fixtureCustomExplorerAPI))
+          .toThrow('One or more of your custom explorer APIs has a priority set below 0 or above 1. ' +
+            'Use 0 to give precedence to custom explorers over the default ones, or 1 for the contrary.');
       });
     });
   });

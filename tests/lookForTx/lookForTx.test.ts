@@ -4,12 +4,13 @@ import * as explorers from '../../src/explorers';
 import { TransactionData } from '../../src/models/TransactionData';
 import CONFIG from '../../src/constants/config';
 import lookForTx, { getExplorersByChain } from '../../src/lookForTx';
+import { ExplorerAPI } from '../../src/models/Explorers';
 
 describe('lookForTx test suite', function () {
   const MOCK_TRANSACTION_ID = 'mock-transaction-id';
 
   describe('given there are no custom explorers', function () {
-    it('should call and resolve from the explorers passed', async function () {
+    it('should call and resolve from the default explorers', async function () {
       const mockTxData: TransactionData = {
         revokedAddresses: [],
         time: '2020-04-20T00:00:00Z',
@@ -33,7 +34,118 @@ describe('lookForTx test suite', function () {
     });
   });
 
-  describe('given it is called with a transactionId, a chain and a certificateVersion', function () {
+  describe('given some custom explorers are passed', function () {
+    describe('when it is a valid custom explorer API object', function () {
+      describe('and the custom explorer API is set an invalid priority', function () {
+        it('should throw an error', async function () {
+          const fixtureExplorerAPI: ExplorerAPI[] = [{
+            serviceURL: 'https://explorer-example.com',
+            priority: -1,
+            parsingFunction: (): TransactionData => {
+              return {
+                remoteHash: 'a',
+                issuingAddress: 'b',
+                time: 'c',
+                revokedAddresses: ['d']
+              };
+            }
+          }];
+
+          await expect(async () => {
+            await lookForTx({
+              transactionId: 'a-transaction-id',
+              chain: SupportedChains.Bitcoin,
+              explorerAPIs: fixtureExplorerAPI
+            });
+          }).rejects.toThrow('One or more of your custom explorer APIs has a priority set below 0 or above 1. ' +
+            'Use 0 to give precedence to custom explorers over the default ones, or 1 for the contrary.');
+        });
+      });
+
+      describe('and the custom explorer API has a missing parsing function', function () {
+        it('should throw an error', async function () {
+          const fixtureExplorerAPI: ExplorerAPI[] = [{
+            serviceURL: 'https://explorer-example.com',
+            priority: 0,
+            parsingFunction: undefined
+          }];
+
+          await expect(async () => {
+            await lookForTx({
+              transactionId: 'a-transaction-id',
+              chain: SupportedChains.Bitcoin,
+              explorerAPIs: fixtureExplorerAPI
+            });
+          }).rejects.toThrow('One or more of your custom explorer APIs does not have a parsing function. ' +
+            'Parsing functions are required to convert the data received from the explorer.');
+        });
+      });
+
+      // describe('and the custom explorer API object is valid', function () {
+      //   it('should set the explorerAPIs to the verifier object', function () {
+      //     const fixture = Object.assign({}, verifierParamFixture);
+      //     const fixtureExplorerAPI: ExplorerAPI[] = [{
+      //       serviceURL: 'https://explorer-example.com',
+      //       priority: 0,
+      //       parsingFunction: (): TransactionData => {
+      //         return {
+      //           remoteHash: 'a',
+      //           issuingAddress: 'b',
+      //           time: 'c',
+      //           revokedAddresses: ['d']
+      //         };
+      //       }
+      //     }];
+      //     fixture.explorerAPIs = fixtureExplorerAPI;
+      //     const expectedExplorers: TExplorerAPIs = getDefaultExplorers();
+      //     expectedExplorers.custom = explorerFactory(fixtureExplorerAPI);
+      //     const verifierInstance = new Verifier(fixture);
+      //     expect(JSON.stringify(verifierInstance.explorerAPIs)).toEqual(JSON.stringify(expectedExplorers));
+      //   });
+      // });
+
+      // describe('and it references a default explorer API used for multiple blockchains', function () {
+      //   let requestStub: sinon.SinonStub;
+      //   const fixtureServiceURL = 'a-totally-custom-url';
+      //
+      //   beforeAll(function () {
+      //     requestStub = sinon.stub(RequestService, 'request').resolves(JSON.stringify({}));
+      //     const fixtureExplorerAPI: ExplorerAPI[] = [{
+      //       serviceName: TRANSACTION_APIS.blockcypher,
+      //       serviceURL: fixtureServiceURL,
+      //       keyPropertyName: 'apiKey',
+      //       key: 'a-custom-api-key',
+      //       parsingFunction: () => ({ // prevent throwing error when executing
+      //         remoteHash: 'a',
+      //         issuingAddress: 'b',
+      //         time: 'c',
+      //         revokedAddresses: ['d']
+      //       })
+      //     }];
+      //     instance = new Verifier({
+      //       ...verifierParamFixture,
+      //       explorerAPIs: fixtureExplorerAPI
+      //     });
+      //   });
+      //
+      //   afterAll(function () {
+      //     requestStub.restore();
+      //   });
+      //
+      //   it('should merge and overwrite the first occurrence of the default explorer API info with the provided one', async function () {
+      //     await instance.explorerAPIs.ethereum[1].getTxData('transaction-id', SupportedChains.Ethmain);
+      //     expect(requestStub.firstCall.args[0]).toEqual({ url: `${fixtureServiceURL}?apiKey=a-custom-api-key` });
+      //   });
+      //
+      //   it('should merge and overwrite the second occurrence of the default explorer API info with the provided one', async function () {
+      //     await instance.explorerAPIs.bitcoin[0].getTxData('transaction-id', SupportedChains.Bitcoin);
+      //     expect(requestStub.secondCall.args[0]).toEqual({ url: `${fixtureServiceURL}?apiKey=a-custom-api-key` });
+      //   });
+      // });
+    });
+  });
+
+  describe('given it is called with a transactionId and a chain', function () {
     describe('given the chain is invalid', function () {
       it('should throw an error', async function () {
         await expect(lookForTx({
