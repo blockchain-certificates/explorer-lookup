@@ -80,68 +80,6 @@ describe('lookForTx test suite', function () {
             'Parsing functions are required to convert the data received from the explorer.');
         });
       });
-
-      // describe('and the custom explorer API object is valid', function () {
-      //   it('should set the explorerAPIs to the verifier object', function () {
-      //     const fixture = Object.assign({}, verifierParamFixture);
-      //     const fixtureExplorerAPI: ExplorerAPI[] = [{
-      //       serviceURL: 'https://explorer-example.com',
-      //       priority: 0,
-      //       parsingFunction: (): TransactionData => {
-      //         return {
-      //           remoteHash: 'a',
-      //           issuingAddress: 'b',
-      //           time: 'c',
-      //           revokedAddresses: ['d']
-      //         };
-      //       }
-      //     }];
-      //     fixture.explorerAPIs = fixtureExplorerAPI;
-      //     const expectedExplorers: TExplorerAPIs = getDefaultExplorers();
-      //     expectedExplorers.custom = explorerFactory(fixtureExplorerAPI);
-      //     const verifierInstance = new Verifier(fixture);
-      //     expect(JSON.stringify(verifierInstance.explorerAPIs)).toEqual(JSON.stringify(expectedExplorers));
-      //   });
-      // });
-
-      // describe('and it references a default explorer API used for multiple blockchains', function () {
-      //   let requestStub: sinon.SinonStub;
-      //   const fixtureServiceURL = 'a-totally-custom-url';
-      //
-      //   beforeAll(function () {
-      //     requestStub = sinon.stub(RequestService, 'request').resolves(JSON.stringify({}));
-      //     const fixtureExplorerAPI: ExplorerAPI[] = [{
-      //       serviceName: TRANSACTION_APIS.blockcypher,
-      //       serviceURL: fixtureServiceURL,
-      //       keyPropertyName: 'apiKey',
-      //       key: 'a-custom-api-key',
-      //       parsingFunction: () => ({ // prevent throwing error when executing
-      //         remoteHash: 'a',
-      //         issuingAddress: 'b',
-      //         time: 'c',
-      //         revokedAddresses: ['d']
-      //       })
-      //     }];
-      //     instance = new Verifier({
-      //       ...verifierParamFixture,
-      //       explorerAPIs: fixtureExplorerAPI
-      //     });
-      //   });
-      //
-      //   afterAll(function () {
-      //     requestStub.restore();
-      //   });
-      //
-      //   it('should merge and overwrite the first occurrence of the default explorer API info with the provided one', async function () {
-      //     await instance.explorerAPIs.ethereum[1].getTxData('transaction-id', SupportedChains.Ethmain);
-      //     expect(requestStub.firstCall.args[0]).toEqual({ url: `${fixtureServiceURL}?apiKey=a-custom-api-key` });
-      //   });
-      //
-      //   it('should merge and overwrite the second occurrence of the default explorer API info with the provided one', async function () {
-      //     await instance.explorerAPIs.bitcoin[0].getTxData('transaction-id', SupportedChains.Bitcoin);
-      //     expect(requestStub.secondCall.args[0]).toEqual({ url: `${fixtureServiceURL}?apiKey=a-custom-api-key` });
-      //   });
-      // });
     });
   });
 
