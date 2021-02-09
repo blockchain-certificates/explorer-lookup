@@ -4,6 +4,7 @@
   "description": "A low level blockchain explorers lookup",
   "main": "lib/cjs",
   "module": "lib/esm",
+  "typings": "./typings/index.d.ts",
   "dependencies": {
     "xmlhttprequest": "^1.8.0"
   },
