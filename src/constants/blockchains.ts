@@ -1,14 +1,5 @@
 import { TRANSACTION_ID_PLACEHOLDER } from './api';
-
-export enum SupportedChains {
-  Bitcoin = 'bitcoin',
-  Ethmain = 'ethmain',
-  Ethropst = 'ethropst',
-  Ethrinkeby = 'ethrinkeby',
-  Mocknet = 'mocknet',
-  Regtest = 'regtest',
-  Testnet = 'testnet'
-}
+import { SupportedChains } from '../typings';
 
 export interface IBlockchainObject {
   code: SupportedChains;

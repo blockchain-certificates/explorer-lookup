@@ -1,4 +1,4 @@
-import { ExplorerAPI } from '../models/Explorers';
+import { ExplorerAPI } from '../typings';
 import { TRANSACTION_ID_PLACEHOLDER } from '../constants/api';
 import { safelyAppendUrlParameter } from '../utils/url';
 

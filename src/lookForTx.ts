@@ -1,9 +1,8 @@
-import { SupportedChains, BLOCKCHAINS } from './constants/blockchains';
+import { BLOCKCHAINS } from './constants/blockchains';
 import CONFIG from './constants/config';
 import PromiseProperRace from './helpers/promiseProperRace';
-import { TransactionData } from './models/TransactionData';
 import { prepareExplorerAPIs, TExplorerAPIs } from './explorers';
-import { ExplorerAPI, TExplorerFunctionsArray } from './models/Explorers';
+import { ExplorerAPI, SupportedChains, TExplorerFunctionsArray, TransactionData } from './typings';
 
 export function getExplorersByChain (chain: SupportedChains, explorerAPIs: TExplorerAPIs): TExplorerFunctionsArray {
   switch (chain) {

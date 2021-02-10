@@ -2,8 +2,7 @@
   "compilerOptions": { "strict": true },
   "include": [
     "**/src/**/*.ts",
-    "**/tests/**/*.ts",
-    "typings/index.d.ts"
+    "**/tests/**/*.ts"
   ],
   "exclude": [
     "lib"

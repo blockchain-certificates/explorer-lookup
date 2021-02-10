@@ -1,7 +1,6 @@
-import { TransactionData } from '../../models/TransactionData';
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { request } from '../../services/request';
-import { IParsingFunctionAPI } from '../../models/Explorers';
+import { IParsingFunctionAPI, TransactionData } from '../../typings';
 
 export async function ethereumRPCParsingFunction ({ serviceUrl, transactionId }: IParsingFunctionAPI): Promise<TransactionData> {
   const transactionByHashParams = {

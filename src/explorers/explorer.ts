@@ -1,8 +1,7 @@
 import { buildTransactionServiceUrl } from '../services/transaction-apis';
 import { request } from '../services/request';
-import { isTestChain, SupportedChains } from '../constants/blockchains';
-import { TransactionData } from '../models/TransactionData';
-import { ExplorerAPI, TExplorerFunctionsArray } from '../models/Explorers';
+import { isTestChain } from '../constants/blockchains';
+import { TransactionData, ExplorerAPI, TExplorerFunctionsArray, SupportedChains } from '../typings';
 import { explorerApi as EtherscanApi } from './ethereum/etherscan';
 import { explorerApi as BlockCypherETHApi } from './ethereum/blockcypher';
 import { explorerApi as BlockExplorerApi } from './bitcoin/blockexplorer';
