@@ -1,4 +1,4 @@
-import { TransactionData } from '../../../src/models/TransactionData';
+import { TransactionData } from '../../../src/typings';
 import { explorerApi as BlockcyperETHApi } from '../../../src/explorers/ethereum/blockcypher';
 
 const responseData = {

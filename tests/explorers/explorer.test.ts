@@ -4,9 +4,8 @@ import { explorerApi as BitpayAPI } from '../../src/explorers/bitcoin/bitpay';
 import { explorerApi as BlockcypherAPI } from '../../src/explorers/bitcoin/blockcypher';
 import * as mockBitpayResponse from './mocks/mockBitpayResponse.json';
 import { explorerFactory, getTransactionFromApi } from '../../src/explorers/explorer';
-import { TRANSACTION_APIS } from '../../src/constants/api';
+import { ExplorerAPI, TRANSACTION_APIS, TransactionData } from '../../src/typings';
 import { BLOCKCHAINS } from '../../src/constants/blockchains';
-import { ExplorerAPI } from '../../src/models/Explorers';
 import {
   getDefaultExplorers,
   getRPCExplorers,
@@ -16,7 +15,6 @@ import {
 } from '../../src/explorers';
 import * as ethRPCExplorer from '../../src/explorers/rpc/ethereum';
 import * as btcRPCExplorer from '../../src/explorers/rpc/bitcoin';
-import { TransactionData } from '../../src/models/TransactionData';
 
 describe('Blockchain Explorers test suite', function () {
   const fixtureTransactionId = '2378076e8e140012814e98a2b2cb1af07ec760b239c1d6d93ba54d658a010ecd';

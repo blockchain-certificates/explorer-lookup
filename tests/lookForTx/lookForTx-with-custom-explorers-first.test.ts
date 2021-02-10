@@ -1,7 +1,6 @@
 import sinon from 'sinon';
-import { TransactionData } from '../../src/models/TransactionData';
+import { SupportedChains, TransactionData } from '../../src/typings';
 import * as explorers from '../../src/explorers';
-import { SupportedChains } from '../../src/constants/blockchains';
 import lookForTx from '../../src/lookForTx';
 
 describe('lookForTx test suite', function () {
