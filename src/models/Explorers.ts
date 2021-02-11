@@ -2,7 +2,7 @@ import { SupportedChains } from '../constants/supported-chains';
 import { TransactionData } from './transactionData';
 import { TRANSACTION_APIS } from '../constants/api';
 
-export declare interface ExplorerURLs {
+export interface ExplorerURLs {
   main: string;
   test: string;
 }
@@ -12,7 +12,7 @@ export type TExplorerFunctionsArray = Array<{
   priority?: number;
 }>;
 
-export declare interface IParsingFunctionAPI {
+export interface IParsingFunctionAPI {
   jsonResponse?: any; // the response from the service when called as rest
   chain?: SupportedChains; // TODO: look at how to deprecate this. Only used in etherscan
   key?: string; // identification key to pass to the service -> TODO: can this be merged into the serviceUrl? Only used in etherscan
@@ -23,7 +23,7 @@ export declare interface IParsingFunctionAPI {
 
 export type TExplorerParsingFunction = ((data: IParsingFunctionAPI) => TransactionData) | ((data: IParsingFunctionAPI) => Promise<TransactionData>);
 
-export declare interface ExplorerAPI {
+export interface ExplorerAPI {
   serviceURL?: string | ExplorerURLs;
   priority?: 0 | 1 | -1; // 0: custom APIs will run before the default APIs, 1: after, -1: reserved to default APIs
   parsingFunction?: TExplorerParsingFunction;
