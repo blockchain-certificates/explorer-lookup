@@ -4,7 +4,7 @@ import {
   explorerFactory
 } from './explorer';
 import { TRANSACTION_APIS } from '../constants/api';
-import { ExplorerAPI, TExplorerFunctionsArray } from '../models/Explorers';
+import { ExplorerAPI, TExplorerFunctionsArray } from '../models/explorers';
 import { ethereumRPCParsingFunction } from './rpc/ethereum';
 import { bitcoinRPCParsingFunction } from './rpc/bitcoin';
 

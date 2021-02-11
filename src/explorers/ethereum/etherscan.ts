@@ -1,11 +1,12 @@
 import { request } from '../../services/request';
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { buildTransactionServiceUrl } from '../../services/transaction-apis';
-import { BLOCKCHAINS, isTestChain, SupportedChains } from '../../constants/blockchains';
-import { TransactionData } from '../../models/TransactionData';
+import { BLOCKCHAINS, isTestChain } from '../../constants/blockchains';
+import { TransactionData } from '../../models/transactionData';
 import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
-import { ExplorerAPI, ExplorerURLs, IParsingFunctionAPI } from '../../models/Explorers';
+import { ExplorerAPI, ExplorerURLs, IParsingFunctionAPI } from '../../models/explorers';
 import CONFIG from '../../constants/config';
+import { SupportedChains } from '../../constants/supported-chains';
 
 const MAIN_API_BASE_URL = 'https://api.etherscan.io/api?module=proxy';
 const TEST_API_BASE_URL = 'https://api-ropsten.etherscan.io/api?module=proxy';

@@ -1,14 +1,15 @@
 import { buildTransactionServiceUrl } from '../services/transaction-apis';
 import { request } from '../services/request';
-import { isTestChain, SupportedChains } from '../constants/blockchains';
-import { TransactionData } from '../models/TransactionData';
-import { ExplorerAPI, TExplorerFunctionsArray } from '../models/Explorers';
+import { isTestChain } from '../constants/blockchains';
+import { TransactionData } from '../models/transactionData';
+import { ExplorerAPI, TExplorerFunctionsArray } from '../models/explorers';
 import { explorerApi as EtherscanApi } from './ethereum/etherscan';
 import { explorerApi as BlockCypherETHApi } from './ethereum/blockcypher';
 import { explorerApi as BlockExplorerApi } from './bitcoin/blockexplorer';
 import { explorerApi as BlockstreamApi } from './bitcoin/blockstream';
 import { explorerApi as BlockCypherBTCApi } from './bitcoin/blockcypher';
 import { explorerApi as BitPayApi } from './bitcoin/bitpay';
+import { SupportedChains } from '../constants/supported-chains';
 
 export function explorerFactory (TransactionAPIArray: ExplorerAPI[]): TExplorerFunctionsArray {
   return TransactionAPIArray
