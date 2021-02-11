@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "outFile": "lib/index.d.ts"
+  },
+  "files": [
+    "src/lookForTx.ts",
+    "src/constants/supported-chains.ts",
+    "src/models/explorers.ts",
+    "src/models/transactionData.ts"
+  ]
+}

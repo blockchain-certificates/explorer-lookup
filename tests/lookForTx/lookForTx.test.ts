@@ -1,6 +1,7 @@
 import sinon from 'sinon';
-import { SupportedChains, TransactionData } from '../../src/typings';
+import { SupportedChains } from '../../src/constants/supported-chains';
 import * as explorers from '../../src/explorers';
+import { TransactionData } from '../../src/models/transactionData';
 import CONFIG from '../../src/constants/config';
 import lookForTx, { getExplorersByChain } from '../../src/lookForTx';
 

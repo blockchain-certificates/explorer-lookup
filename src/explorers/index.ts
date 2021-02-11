@@ -3,7 +3,8 @@ import {
   EthereumTransactionAPIArray as EthereumExplorers,
   explorerFactory
 } from './explorer';
-import { ExplorerAPI, TExplorerFunctionsArray, TRANSACTION_APIS } from '../typings';
+import { TRANSACTION_APIS } from '../constants/api';
+import { ExplorerAPI, TExplorerFunctionsArray } from '../models/explorers';
 import { ethereumRPCParsingFunction } from './rpc/ethereum';
 import { bitcoinRPCParsingFunction } from './rpc/bitcoin';
 

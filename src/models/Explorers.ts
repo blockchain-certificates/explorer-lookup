@@ -1,27 +1,6 @@
-export declare interface TransactionData {
-  remoteHash: string;
-  issuingAddress: string;
-  time: string | Date;
-  revokedAddresses: string[];
-}
-
-export declare enum SupportedChains {
-  Bitcoin = 'bitcoin',
-  Ethmain = 'ethmain',
-  Ethropst = 'ethropst',
-  Ethrinkeby = 'ethrinkeby',
-  Mocknet = 'mocknet',
-  Regtest = 'regtest',
-  Testnet = 'testnet'
-}
-
-export declare enum TRANSACTION_APIS {
-  bitpay = 'bitpay',
-  blockcypher = 'blockcypher',
-  blockexplorer = 'blockexplorer',
-  blockstream = 'blockstream',
-  etherscan = 'etherscan'
-}
+import { SupportedChains } from '../constants/supported-chains';
+import { TransactionData } from './transactionData';
+import { TRANSACTION_APIS } from '../constants/api';
 
 export declare interface ExplorerURLs {
   main: string;
@@ -61,7 +40,3 @@ export declare interface ExplorerAPI {
   // defaults to 'eth'
   chainType?: 'btc' | 'evm' | 'eth';
 }
-
-export declare async function lookForTx (
-  { transactionId, chain, explorerAPIs = [] }: { transactionId: string; chain: SupportedChains; explorerAPIs?: ExplorerAPI[] }
-): Promise<TransactionData>;

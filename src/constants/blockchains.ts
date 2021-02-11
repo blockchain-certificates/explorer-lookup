@@ -1,5 +1,5 @@
 import { TRANSACTION_ID_PLACEHOLDER } from './api';
-import { SupportedChains } from '../typings';
+import { SupportedChains } from './supported-chains';
 
 export interface IBlockchainObject {
   code: SupportedChains;

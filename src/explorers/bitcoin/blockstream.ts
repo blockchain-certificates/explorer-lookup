@@ -1,7 +1,8 @@
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { timestampToDateObject } from '../../utils/date';
-import { ExplorerAPI, ExplorerURLs, IParsingFunctionAPI, TRANSACTION_APIS, TransactionData } from '../../typings';
-import { TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
+import { ExplorerAPI, ExplorerURLs, IParsingFunctionAPI } from '../../models/explorers';
+import { TransactionData } from '../../models/transactionData';
+import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
 import { BLOCKCHAINS } from '../../constants/blockchains';
 
 // TODO: use tests/explorers/mocks/mockBlockstreamResponse as type

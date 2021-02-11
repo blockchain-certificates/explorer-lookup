@@ -1,5 +1,5 @@
-import { ExplorerAPI } from '../../src/models/Explorers';
-import { TransactionData } from '../../src/models/TransactionData';
+import { ExplorerAPI } from '../../src/models/explorers';
+import { TransactionData } from '../../src/models/transactionData';
 import ensureExplorerAPIValidity from '../../src/utils/ensureExplorerAPIValidity';
 
 describe('ensureExplorerAPIValidity test suite', function () {

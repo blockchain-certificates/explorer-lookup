@@ -1,4 +1,4 @@
-import { ExplorerAPI } from '../typings';
+import { ExplorerAPI } from '../models/explorers';
 
 function isPriorityValid (explorerAPI: ExplorerAPI): boolean {
   return explorerAPI.priority >= 0;
