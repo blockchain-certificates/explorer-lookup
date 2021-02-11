@@ -34,8 +34,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "semantic-release": "semantic-release",
-    "clean:build": "rimraf lib",
-    "ts:build": "tsc -d src/models/Explorers.ts"
+    "clean:build": "rimraf lib"
   },
   "husky": {
     "hooks": {
