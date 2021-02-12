@@ -12,8 +12,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "lib/esm",
-    "declaration": true
+    "outDir": "lib/esm"
   },
   "compileOnSave": false,
   "exclude": [

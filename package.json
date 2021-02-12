@@ -4,6 +4,7 @@
   "description": "A low level blockchain explorers lookup",
   "main": "lib/cjs",
   "module": "lib/esm",
+  "types": "./lib/index.d.ts",
   "dependencies": {
     "xmlhttprequest": "^1.8.0"
   },
@@ -12,6 +13,7 @@
     "@types/sinon": "^9.0.10",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
+    "dts-bundle-generator": "^5.7.0",
     "eslint": "^7.19.0",
     "eslint-config-standard-with-typescript": "^20.0.0",
     "eslint-plugin-import": "^2.22.1",
@@ -27,11 +29,13 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "compile": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
+    "compile": "npm run clean:build && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && npm run dts:bundle",
+    "dts:bundle": "dts-bundle-generator -o ./lib/index.d.ts --project tsconfig.json --no-banner src/index.ts",
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:watch": "jest --watch",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "clean:build": "rimraf lib"
   },
   "husky": {
     "hooks": {

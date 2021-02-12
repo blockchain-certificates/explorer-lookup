@@ -1,6 +1,6 @@
 import sinon from 'sinon';
-import { TransactionData } from '../../src/models/TransactionData';
-import { SupportedChains } from '../../src/constants/blockchains';
+import { TransactionData } from '../../src/models/transactionData';
+import { SupportedChains } from '../../src/constants/supported-chains';
 import lookForTx from '../../src/lookForTx';
 import * as explorers from '../../src/explorers';
 

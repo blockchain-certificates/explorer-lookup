@@ -1,6 +1,6 @@
+import { SupportedChains } from '../constants/supported-chains';
+import { TransactionData } from './transactionData';
 import { TRANSACTION_APIS } from '../constants/api';
-import { SupportedChains } from '../constants/blockchains';
-import { TransactionData } from './TransactionData';
 
 export interface ExplorerURLs {
   main: string;
@@ -11,6 +11,7 @@ export type TExplorerFunctionsArray = Array<{
   getTxData: (transactionId: string, chain?: SupportedChains) => Promise<TransactionData>;
   priority?: number;
 }>;
+
 export interface IParsingFunctionAPI {
   jsonResponse?: any; // the response from the service when called as rest
   chain?: SupportedChains; // TODO: look at how to deprecate this. Only used in etherscan
@@ -19,8 +20,8 @@ export interface IParsingFunctionAPI {
   transactionId?: string; // when using in RPCs we pass the tx id to look up since these functions are responsible for service lookup
   serviceUrl?: string; // the distant service url
 }
-export type TExplorerParsingFunction = ((data: IParsingFunctionAPI) => TransactionData) |
-((data: IParsingFunctionAPI) => Promise<TransactionData>);
+
+export type TExplorerParsingFunction = ((data: IParsingFunctionAPI) => TransactionData) | ((data: IParsingFunctionAPI) => Promise<TransactionData>);
 
 export interface ExplorerAPI {
   serviceURL?: string | ExplorerURLs;
