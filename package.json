@@ -28,7 +28,7 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "declaration:generate": "rm -f lib/index.d.ts && tsc -p tsconfig.types.json",
+    "declaration:generate": "tsc -p tsconfig.types.json",
     "compile": "npm run clean:build && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && npm run declaration:generate",
     "lint": "eslint . --ext .ts",
     "test": "jest",
