@@ -7,5 +7,8 @@ before_script:
   - npm run lint
 script:
   - npm run compile
+after_script:
+  - npm run test:coverage
+  - npm run test:coverage:report
 after_success:
   - npm run semantic-release
