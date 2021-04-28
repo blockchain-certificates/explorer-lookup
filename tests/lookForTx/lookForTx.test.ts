@@ -102,7 +102,7 @@ describe('getExplorersByChain test suite', function () {
       it('should use the bitcoin specific explorers', function () {
         const selectedSelectors = getExplorersByChain(SupportedChains.Bitcoin, explorers.getDefaultExplorers());
         // because they are wrapped, we don't necessarily have the deep nature of the result, so we use a weak test to ensure
-        expect(selectedSelectors.length).toBe(4);
+        expect(selectedSelectors.length).toBe(2);
       });
     });
 
@@ -110,7 +110,7 @@ describe('getExplorersByChain test suite', function () {
       it('should use the bitcoin specific explorers', function () {
         const selectedSelectors = getExplorersByChain(SupportedChains.Mocknet, explorers.getDefaultExplorers());
         // because they are wrapped, we don't necessarily have the deep nature of the result, so we use a weak test to ensure
-        expect(selectedSelectors.length).toBe(4);
+        expect(selectedSelectors.length).toBe(2);
       });
     });
 
@@ -118,7 +118,7 @@ describe('getExplorersByChain test suite', function () {
       it('should use the bitcoin specific explorers', function () {
         const selectedSelectors = getExplorersByChain(SupportedChains.Testnet, explorers.getDefaultExplorers());
         // because they are wrapped, we don't necessarily have the deep nature of the result, so we use a weak test to ensure
-        expect(selectedSelectors.length).toBe(4);
+        expect(selectedSelectors.length).toBe(2);
       });
     });
 
@@ -126,7 +126,7 @@ describe('getExplorersByChain test suite', function () {
       it('should use the bitcoin specific explorers', function () {
         const selectedSelectors = getExplorersByChain(SupportedChains.Regtest, explorers.getDefaultExplorers());
         // because they are wrapped, we don't necessarily have the deep nature of the result, so we use a weak test to ensure
-        expect(selectedSelectors.length).toBe(4);
+        expect(selectedSelectors.length).toBe(2);
       });
     });
 
