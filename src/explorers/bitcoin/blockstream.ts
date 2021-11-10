@@ -13,7 +13,7 @@ function parsingFunction ({ jsonResponse }: IParsingFunctionAPI): TransactionDat
   const time: Date = timestampToDateObject(jsonResponse.status.block_time);
   const outputs = jsonResponse.vout;
   const lastOutput = outputs[outputs.length - 1];
-  const issuingAddress: string = jsonResponse.vout[0].scriptpubkey_address;
+  const issuingAddress: string = jsonResponse.vin[0].prevout.scriptpubkey_address;
   const remoteHash: string = stripHashPrefix(lastOutput.scriptpubkey, BLOCKCHAINS.bitcoin.prefixes);
   const revokedAddresses: string[] = outputs
     .filter(output => !!output.scriptpubkey_address)
