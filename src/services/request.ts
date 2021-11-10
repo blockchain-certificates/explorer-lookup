@@ -5,6 +5,7 @@ export interface IRequestParameters {
   method?: 'GET' | 'POST';
   body?: any;
   forceHttp?: boolean;
+  'bearer-token'?: string;
 }
 
 // TODO: not tested
@@ -24,6 +25,10 @@ export async function request (obj: IRequestParameters): Promise<any> {
     // server
     const XHR = typeof XMLHttpRequest === 'undefined' ? xhrPolyfill : XMLHttpRequest;
     const request: XMLHttpRequest = new XHR();
+
+    if (obj['bearer-token']) {
+      request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
+    }
 
     request.onload = () => {
       if (request.status >= 200 && request.status < 300) {
