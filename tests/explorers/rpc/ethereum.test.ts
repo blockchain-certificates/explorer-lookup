@@ -9,7 +9,7 @@ const blockByNumberResponse = '{"jsonrpc":"2.0","id":"blockbynumber","result":{"
 describe('Ethereum RPC response parsing test suite', function () {
   describe('given it is called with a transactionId and a server URL', function () {
     it('should retrieve the transaction data', async function () {
-      const requestStub: sinon.SinonStub = sinon.stub(request, 'request');
+      const requestStub: sinon.SinonStub = sinon.stub(request, 'default');
       const transactionId = 'ef59c07bed26d473925e688ec4da2211981820dc1167427ef34d2a2e6f45b8fa';
       const serviceUrl = 'https://an-evm-rpc-explorer.com/';
 

@@ -30,7 +30,7 @@ describe('Etherscan Explorer test suite', function () {
 
     describe('given the ether scan block cannot get retrieved', function () {
       it('should throw the right error', async function () {
-        const stubRequest = sinon.stub(RequestServices, 'request').rejects();
+        const stubRequest = sinon.stub(RequestServices, 'default').rejects();
         await expect(explorerApi.parsingFunction({ jsonResponse: mockResponse }))
           .rejects.toThrow('Unable to get remote hash');
         stubRequest.restore();
