@@ -9,7 +9,7 @@ export interface IRequestParameters {
 }
 
 // TODO: not tested
-export async function request (obj: IRequestParameters): Promise<any> {
+export default async function request (obj: IRequestParameters): Promise<any> {
   return await new Promise((resolve, reject) => {
     let { url } = obj;
 
