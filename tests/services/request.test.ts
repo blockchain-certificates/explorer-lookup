@@ -1,35 +1,51 @@
 import request from '../../src/services/request';
 import sinon from 'sinon';
 
-class MockXMLHttpRequest {
-  public status: number;
-  public headers: any = {};
-  public headersCase: any = {};
+function MockXMLHttpRequestFactory ({ isSuccessCase }: { isSuccessCase: boolean }): any {
+  return class MockXMLHttpRequest {
+    public status: number;
+    public responseText: string;
+    public headers: any = {};
+    public headersCase: any = {};
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  open (method: string, url: string): any {}
-  send (): any {
-    this.onloadSuccess();
-  }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    open (method: string, url: string): any {}
+    send (): any {
+      if (isSuccessCase) {
+        this.onloadSuccess();
+      } else {
+        this.onloadFailure();
+      }
+    }
 
-  onloadSuccess (): any {
-    this.status = 200;
-    this.onload();
-  }
+    onloadFailure (): void {
+      this.status = 500;
+      this.responseText = 'failure test case';
+      this.onload();
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onload (): any {}
+    onloadSuccess (): void {
+      this.status = 200;
+      this.responseText = 'success';
+      this.onload();
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setRequestHeader (name: string, value: string): any {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onload (): any {}
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    setRequestHeader (name: string, value: string): any {}
+  };
 }
 
 describe('Services Request test suite', function () {
   let globalXhr;
+  const MockXMLHttpRequestSuccess = MockXMLHttpRequestFactory({ isSuccessCase: true });
+  const MockXMLHttpRequestFailure = MockXMLHttpRequestFactory({ isSuccessCase: false });
 
   beforeEach(function () {
     globalXhr = global.XMLHttpRequest;
-    (global.XMLHttpRequest as any) = MockXMLHttpRequest;
+    (global.XMLHttpRequest as any) = MockXMLHttpRequestSuccess;
   });
 
   afterEach(function () {
@@ -50,7 +66,7 @@ describe('Services Request test suite', function () {
 
     beforeEach(function () {
       // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      openStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'open');
+      openStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'open');
     });
 
     it('should upgrade the protocol to HTTPS', async function () {
@@ -74,7 +90,7 @@ describe('Services Request test suite', function () {
   describe('given a bearer token option is passed', function () {
     it('should set the header with the bearer token value', async function () {
       // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'setRequestHeader');
+      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
       await request({
         url: 'https://www.test.com',
         'bearer-token': 'my-bearer-token'
@@ -88,7 +104,7 @@ describe('Services Request test suite', function () {
 
     beforeEach(function () {
       // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      openStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'open');
+      openStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'open');
     });
 
     describe('given a method option is passed', function () {
@@ -116,7 +132,7 @@ describe('Services Request test suite', function () {
 
     beforeEach(function () {
       // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      sendStub = sinon.stub<[string]>(MockXMLHttpRequest.prototype, 'send').callThrough();
+      sendStub = sinon.stub<[string]>(MockXMLHttpRequestSuccess.prototype, 'send').callThrough();
     });
 
     describe('given the body option is set', function () {
@@ -138,6 +154,28 @@ describe('Services Request test suite', function () {
           url: 'https://www.test.com'
         });
         expect(sendStub.getCall(0).args[0]).toBeUndefined();
+      });
+    });
+  });
+
+  describe('onload method', function () {
+    describe('given the response status is 2xx', function () {
+      it('should resolve the responseText', async function () {
+        const response = await request({
+          url: 'https://www.test.com'
+        });
+        expect(response).toBe('success');
+      });
+    });
+
+    describe('given the response status is not 2xx', function () {
+      it('should reject the request with the error code', async function () {
+        (global.XMLHttpRequest as any) = MockXMLHttpRequestFailure;
+        await expect(async () => {
+          await request({
+            url: 'https://www.test.com'
+          });
+        }).rejects.toEqual(new Error('Error fetching url:https://www.test.com; status code:500'));
       });
     });
   });
