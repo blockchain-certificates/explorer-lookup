@@ -76,7 +76,7 @@ describe('Services Request test suite', function () {
       // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
       const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'setRequestHeader');
       await request({
-        url: 'http://www.test.com',
+        url: 'https://www.test.com',
         'bearer-token': 'my-bearer-token'
       });
       expect(setRequestHeaderStub.getCall(0).args).toEqual(['Authorization', 'Bearer my-bearer-token']);
@@ -94,7 +94,7 @@ describe('Services Request test suite', function () {
     describe('given a method option is passed', function () {
       it('should use the method to make the call', async function () {
         await request({
-          url: 'http://www.test.com',
+          url: 'https://www.test.com',
           method: 'POST'
         });
         expect(openStub.getCall(0).args[0]).toEqual('POST');
@@ -104,9 +104,40 @@ describe('Services Request test suite', function () {
     describe('given no method option is passed', function () {
       it('should default to the GET method to make the call', async function () {
         await request({
-          url: 'http://www.test.com'
+          url: 'https://www.test.com'
         });
         expect(openStub.getCall(0).args[0]).toEqual('GET');
+      });
+    });
+  });
+
+  describe('body option', function () {
+    let sendStub;
+
+    beforeEach(function () {
+      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
+      sendStub = sinon.stub<[string]>(MockXMLHttpRequest.prototype, 'send').callThrough();
+    });
+
+    describe('given the body option is set', function () {
+      it('should send the body', async function () {
+        const body = {
+          test: true
+        };
+        await request({
+          url: 'https://www.test.com',
+          body
+        });
+        expect(sendStub.getCall(0).args[0]).toBe(JSON.stringify(body));
+      });
+    });
+
+    describe('given the body option is not set', function () {
+      it('should send nothing', async function () {
+        await request({
+          url: 'https://www.test.com'
+        });
+        expect(sendStub.getCall(0).args[0]).toBeUndefined();
       });
     });
   });
