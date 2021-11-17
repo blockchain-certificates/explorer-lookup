@@ -82,4 +82,32 @@ describe('Services Request test suite', function () {
       expect(setRequestHeaderStub.getCall(0).args).toEqual(['Authorization', 'Bearer my-bearer-token']);
     });
   });
+
+  describe('method option', function () {
+    let openStub;
+
+    beforeEach(function () {
+      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
+      openStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'open');
+    });
+
+    describe('given a method option is passed', function () {
+      it('should use the method to make the call', async function () {
+        await request({
+          url: 'http://www.test.com',
+          method: 'POST'
+        });
+        expect(openStub.getCall(0).args[0]).toEqual('POST');
+      });
+    });
+
+    describe('given no method option is passed', function () {
+      it('should default to the GET method to make the call', async function () {
+        await request({
+          url: 'http://www.test.com'
+        });
+        expect(openStub.getCall(0).args[0]).toEqual('GET');
+      });
+    });
+  });
 });
