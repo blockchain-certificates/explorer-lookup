@@ -3,6 +3,9 @@ import sinon from 'sinon';
 
 class MockXMLHttpRequest {
   public status: number;
+  public headers: any = {};
+  public headersCase: any = {};
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   open (method: string, url: string): any {}
   send (): any {
@@ -16,6 +19,9 @@ class MockXMLHttpRequest {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onload (): any {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setRequestHeader (name: string, value: string): any {}
 }
 
 describe('Services Request test suite', function () {
@@ -40,9 +46,14 @@ describe('Services Request test suite', function () {
   });
 
   describe('given the URL is HTTP', function () {
-    it('should upgrade the protocol to HTTPS', async function () {
+    let openStub;
+
+    beforeEach(function () {
       // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const openStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'open');
+      openStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'open');
+    });
+
+    it('should upgrade the protocol to HTTPS', async function () {
       await request({
         url: 'http://www.test.com'
       });
@@ -51,14 +62,24 @@ describe('Services Request test suite', function () {
 
     describe('and the forceHttp flag is true', function () {
       it('should maintain the protocol to HTTP', async function () {
-        // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-        const openStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'open');
         await request({
           url: 'http://www.test.com',
           forceHttp: true
         });
         expect(openStub.getCall(0).args[1]).toBe('http://www.test.com');
       });
+    });
+  });
+
+  describe('given a bearer token option is passed', function () {
+    it('should set the header with the bearer token value', async function () {
+      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
+      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequest.prototype, 'setRequestHeader');
+      await request({
+        url: 'http://www.test.com',
+        'bearer-token': 'my-bearer-token'
+      });
+      expect(setRequestHeaderStub.getCall(0).args).toEqual(['Authorization', 'Bearer my-bearer-token']);
     });
   });
 });

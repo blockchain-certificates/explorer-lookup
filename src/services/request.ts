@@ -8,7 +8,6 @@ export interface IRequestParameters {
   'bearer-token'?: string;
 }
 
-// TODO: not tested
 export default async function request (obj: IRequestParameters): Promise<any> {
   return await new Promise((resolve, reject) => {
     let { url } = obj;
