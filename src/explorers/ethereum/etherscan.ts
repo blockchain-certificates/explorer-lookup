@@ -1,4 +1,4 @@
-import { request } from '../../services/request';
+import request from '../../services/request';
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { buildTransactionServiceUrl } from '../../services/transaction-apis';
 import { BLOCKCHAINS, isTestChain } from '../../constants/blockchains';

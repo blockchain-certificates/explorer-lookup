@@ -7,7 +7,7 @@ const getRawTransactionResponse = '{"result":{"txid":"d75b7a5bdb3d5244b753e6b84e
 describe('Bitcoin RPC response parsing test suite', function () {
   describe('given it is called with a transactionId and a server URL', function () {
     it('should retrieve the transaction data', async function () {
-      const requestStub: sinon.SinonStub = sinon.stub(request, 'request');
+      const requestStub: sinon.SinonStub = sinon.stub(request, 'default');
       const transactionId = 'd75b7a5bdb3d5244b753e6b84e987267cfa4ffa7a532a2ed49ad3848be1d82f8';
       const serviceUrl = 'a-btc-rpc-url.com';
 

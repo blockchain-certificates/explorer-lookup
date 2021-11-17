@@ -1,5 +1,5 @@
 import { buildTransactionServiceUrl } from '../services/transaction-apis';
-import { request } from '../services/request';
+import request from '../services/request';
 import { isTestChain } from '../constants/blockchains';
 import { TransactionData } from '../models/transactionData';
 import { ExplorerAPI, TExplorerFunctionsArray } from '../models/explorers';

@@ -30,7 +30,7 @@ describe('Blockchain Explorers test suite', function () {
   };
 
   beforeEach(function () {
-    stubRequest = sinon.stub(RequestService, 'request').resolves(JSON.stringify(mockBlockstreamResponse));
+    stubRequest = sinon.stub(RequestService, 'default').resolves(JSON.stringify(mockBlockstreamResponse));
   });
 
   afterEach(function () {
