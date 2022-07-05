@@ -52,6 +52,24 @@ const BLOCKCHAINS: {[chain in SupportedChains]: IBlockchainObject} = {
       raw: `https://rinkeby.etherscan.io/getRawTx?tx=${TRANSACTION_ID_PLACEHOLDER}`
     }
   },
+  [SupportedChains.Ethgoerli]: {
+    code: SupportedChains.Ethgoerli,
+    name: 'Ethereum Testnet',
+    signatureValue: 'ethereumGoerli',
+    transactionTemplates: {
+      full: `https://goerli.etherscan.io/tx/${TRANSACTION_ID_PLACEHOLDER}`,
+      raw: `https://goerli.etherscan.io/getRawTx?tx=${TRANSACTION_ID_PLACEHOLDER}`
+    }
+  },
+  [SupportedChains.Ethsepolia]: {
+    code: SupportedChains.Ethsepolia,
+    name: 'Ethereum Testnet',
+    signatureValue: 'ethereumSepolia',
+    transactionTemplates: {
+      full: `https://sepolia.etherscan.io/tx/${TRANSACTION_ID_PLACEHOLDER}`,
+      raw: `https://sepolia.etherscan.io/getRawTx?tx=${TRANSACTION_ID_PLACEHOLDER}`
+    }
+  },
   [SupportedChains.Mocknet]: {
     code: SupportedChains.Mocknet,
     name: 'Mocknet',
