@@ -1,6 +1,7 @@
 import { buildTransactionServiceUrl } from '../../src/services/transaction-apis';
 import { explorerApi as Blockcypher } from '../../src/explorers/bitcoin/blockcypher';
 import { explorerApi as Etherscan } from '../../src/explorers/ethereum/etherscan';
+import { SupportedChains } from '../../src/constants/supported-chains';
 
 describe('Transaction APIs test suite', function () {
   let fixtureApi;
@@ -12,7 +13,7 @@ describe('Transaction APIs test suite', function () {
         fixtureApi = Blockcypher;
       });
 
-      describe('given isTestApi is set to false', function () {
+      describe('given chain is set to null', function () {
         it('should return the mainnet address with the transaction ID', function () {
           expect(buildTransactionServiceUrl({
             explorerAPI: fixtureApi,
@@ -21,13 +22,88 @@ describe('Transaction APIs test suite', function () {
         });
       });
 
-      describe('given isTestApi is set to true', function () {
+      describe('given chain is set to the testnet', function () {
         it('should return the testnet address with the transaction ID', function () {
           expect(buildTransactionServiceUrl({
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId,
-            isTestApi: true
+            chain: SupportedChains.Testnet
           })).toEqual(`https://api.blockcypher.com/v1/btc/test3/txs/${fixtureTransactionId}?limit=500`);
+        });
+      });
+    });
+
+    describe('handling Etherscan APIs', function () {
+      beforeEach(function () {
+        fixtureApi = Etherscan;
+      });
+
+      describe('given chain is set to null', function () {
+        it('should return the mainnet address with the transaction ID', function () {
+          expect(buildTransactionServiceUrl({
+            explorerAPI: fixtureApi,
+            transactionId: fixtureTransactionId
+          })).toEqual(`https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        });
+      });
+
+      describe('given chain is set to the mainnet', function () {
+        it('should return the mainnet address with the transaction ID', function () {
+          expect(buildTransactionServiceUrl({
+            explorerAPI: fixtureApi,
+            transactionId: fixtureTransactionId,
+            chain: SupportedChains.Ethmain
+          })).toEqual(`https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        });
+      });
+
+      describe('given chain is set to the ropsten', function () {
+        it('should return the ropsten address with the transaction ID', function () {
+          expect(buildTransactionServiceUrl({
+            explorerAPI: fixtureApi,
+            transactionId: fixtureTransactionId,
+            chain: SupportedChains.Ethropst
+          })).toEqual(`https://api-ropsten.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        });
+      });
+
+      describe('given chain is set to the rinkeby', function () {
+        it('should return the rinkeby address with the transaction ID', function () {
+          expect(buildTransactionServiceUrl({
+            explorerAPI: fixtureApi,
+            transactionId: fixtureTransactionId,
+            chain: SupportedChains.Ethrinkeby
+          })).toEqual(`https://api-rinkeby.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        });
+      });
+
+      describe('given chain is set to the goerli', function () {
+        it('should return the goerli address with the transaction ID', function () {
+          expect(buildTransactionServiceUrl({
+            explorerAPI: fixtureApi,
+            transactionId: fixtureTransactionId,
+            chain: SupportedChains.Ethgoerli
+          })).toEqual(`https://api-goerli.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        });
+      });
+
+      describe('given chain is set to the sepolia', function () {
+        it('should return the sepolia address with the transaction ID', function () {
+          expect(buildTransactionServiceUrl({
+            explorerAPI: fixtureApi,
+            transactionId: fixtureTransactionId,
+            chain: SupportedChains.Ethsepolia
+          })).toEqual(`https://api-sepolia.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        });
+      });
+
+      describe('and the serviceURL/getTransactionServiceURL are not set', function () {
+        it('should throw', function () {
+          expect(() => {
+            buildTransactionServiceUrl({
+              explorerAPI: JSON.parse(JSON.stringify(Etherscan))
+            });
+          }).toThrow('No serviceURL/getTransactionServiceURL defined for explorerAPI etherscan');
         });
       });
     });
@@ -37,6 +113,7 @@ describe('Transaction APIs test suite', function () {
 
       beforeEach(function () {
         fixtureApi = JSON.parse(JSON.stringify(Etherscan));
+        fixtureApi.getTransactionServiceURL = Etherscan.getTransactionServiceURL;
         fixtureApi.key = fixtureAPIToken;
         fixtureApi.keyPropertyName = 'apikey';
       });
@@ -47,7 +124,7 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId
           });
-          const expectedOutput = `https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=fixture-transaction-id&apikey=${fixtureAPIToken}`;
+          const expectedOutput = `https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}&apikey=${fixtureAPIToken}`;
           expect(output).toBe(expectedOutput);
         });
       });

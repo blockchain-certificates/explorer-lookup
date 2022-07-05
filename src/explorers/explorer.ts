@@ -1,6 +1,5 @@
 import { buildTransactionServiceUrl } from '../services/transaction-apis';
 import request from '../services/request';
-import { isTestChain } from '../constants/blockchains';
 import { TransactionData } from '../models/transactionData';
 import { ExplorerAPI, TExplorerFunctionsArray } from '../models/explorers';
 import { explorerApi as EtherscanApi } from './ethereum/etherscan';
@@ -27,7 +26,7 @@ export async function getTransactionFromApi (
   const requestUrl = buildTransactionServiceUrl({
     explorerAPI,
     transactionId,
-    isTestApi: isTestChain(chain)
+    chain
   });
 
   try {

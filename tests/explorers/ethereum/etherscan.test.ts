@@ -3,6 +3,7 @@ import * as mockEtherscanResponse from '../mocks/mockEtherscanResponse.json';
 import { explorerApi } from '../../../src/explorers/ethereum/etherscan';
 import * as RequestServices from '../../../src/services/request';
 import { TransactionData } from '../../../src/models/transactionData';
+import { SupportedChains } from '../../../src/constants/supported-chains';
 
 function getMockEtherscanResponse (): typeof mockEtherscanResponse {
   return JSON.parse(JSON.stringify(mockEtherscanResponse));
@@ -24,7 +25,7 @@ describe('Etherscan Explorer test suite', function () {
         time: new Date('2019-06-02T08:38:26.000Z')
       };
 
-      const res = await explorerApi.parsingFunction({ jsonResponse: mockResponse });
+      const res = await explorerApi.parsingFunction({ jsonResponse: mockResponse, chain: SupportedChains.Ethropst });
       expect(res).toEqual(assertionTransactionData);
     });
 
