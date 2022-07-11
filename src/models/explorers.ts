@@ -24,8 +24,7 @@ export interface IParsingFunctionAPI {
 export type TExplorerParsingFunction = ((data: IParsingFunctionAPI) => TransactionData) | ((data: IParsingFunctionAPI) => Promise<TransactionData>);
 
 export interface ExplorerAPI {
-  serviceURL?: string | ExplorerURLs;
-  getTransactionServiceURL?: (chain: SupportedChains) => string;
+  serviceURL?: string | ExplorerURLs | ((chain: SupportedChains) => string);
   priority?: 0 | 1 | -1; // 0: custom APIs will run before the default APIs, 1: after, -1: reserved to default APIs
   parsingFunction?: TExplorerParsingFunction;
   serviceName?: TRANSACTION_APIS; // in case one would want to overload the default explorers

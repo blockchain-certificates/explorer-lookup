@@ -97,13 +97,13 @@ describe('Transaction APIs test suite', function () {
         });
       });
 
-      describe('and the serviceURL/getTransactionServiceURL are not set', function () {
+      describe('and the serviceURL is not set', function () {
         it('should throw', function () {
           expect(() => {
             buildTransactionServiceUrl({
               explorerAPI: JSON.parse(JSON.stringify(Etherscan))
             });
-          }).toThrow('No serviceURL/getTransactionServiceURL defined for explorerAPI etherscan');
+          }).toThrow('serviceURL is an unexpected type for explorerAPI etherscan');
         });
       });
     });
@@ -113,7 +113,7 @@ describe('Transaction APIs test suite', function () {
 
       beforeEach(function () {
         fixtureApi = JSON.parse(JSON.stringify(Etherscan));
-        fixtureApi.getTransactionServiceURL = Etherscan.getTransactionServiceURL;
+        fixtureApi.serviceURL = Etherscan.serviceURL;
         fixtureApi.key = fixtureAPIToken;
         fixtureApi.keyPropertyName = 'apikey';
       });

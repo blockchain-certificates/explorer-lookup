@@ -125,7 +125,7 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
 }
 
 export const explorerApi: ExplorerAPI = {
-  getTransactionServiceURL,
+  serviceURL: getTransactionServiceURL,
   serviceName: TRANSACTION_APIS.etherscan,
   parsingFunction,
   priority: -1

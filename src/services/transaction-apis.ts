@@ -27,17 +27,17 @@ export function buildTransactionServiceUrl ({
   transactionId?: string;
   chain?: SupportedChains;
 }): string {
-  const { serviceURL, getTransactionServiceURL } = explorerAPI;
+  const { serviceURL } = explorerAPI;
   let apiUrl: string;
   if (typeof serviceURL === 'string') {
     apiUrl = serviceURL;
   } else if (typeof serviceURL === 'object') {
     const isTestApi = chain ? isTestChain(chain) : false;
     apiUrl = isTestApi ? serviceURL.test : serviceURL.main;
-  } else if (typeof getTransactionServiceURL === 'function') {
-    apiUrl = getTransactionServiceURL(chain);
+  } else if (typeof serviceURL === 'function') {
+    apiUrl = serviceURL(chain);
   } else {
-    throw new Error(`No serviceURL/getTransactionServiceURL defined for explorerAPI ${explorerAPI.serviceName}`);
+    throw new Error(`serviceURL is an unexpected type for explorerAPI ${explorerAPI.serviceName}`);
   }
   apiUrl = apiUrl.replace(transactionIdPlaceholder, transactionId);
   apiUrl = appendApiIdentifier(apiUrl, explorerAPI);
