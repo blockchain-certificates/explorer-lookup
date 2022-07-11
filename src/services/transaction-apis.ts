@@ -20,7 +20,7 @@ export function buildTransactionServiceUrl ({
   explorerAPI,
   transactionIdPlaceholder = TRANSACTION_ID_PLACEHOLDER,
   transactionId = '',
-  chain = null
+  chain
 }: {
   explorerAPI: ExplorerAPI;
   transactionIdPlaceholder?: string;
