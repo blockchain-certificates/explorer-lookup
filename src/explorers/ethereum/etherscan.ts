@@ -11,20 +11,17 @@ import { SupportedChains } from '../../constants/supported-chains';
 const MAIN_API_BASE_URL = 'https://api.etherscan.io/api?module=proxy';
 
 function getApiBaseURL (chain: SupportedChains): string {
-  switch (chain) {
-    case SupportedChains.Ethmain:
-      return MAIN_API_BASE_URL;
-    case SupportedChains.Ethropst:
-      return 'https://api-ropsten.etherscan.io/api?module=proxy';
-    case SupportedChains.Ethrinkeby:
-      return 'https://api-rinkeby.etherscan.io/api?module=proxy';
-    case SupportedChains.Ethgoerli:
-      return 'https://api-goerli.etherscan.io/api?module=proxy';
-    case SupportedChains.Ethsepolia:
-      return 'https://api-sepolia.etherscan.io/api?module=proxy';
-    default:
-      return MAIN_API_BASE_URL;
+  const testnetNameMap = {
+    [SupportedChains.Ethropst]: 'ropsten',
+    [SupportedChains.Ethrinkeby]: 'rinkeby',
+    [SupportedChains.Ethgoerli]: 'goerli',
+    [SupportedChains.Ethsepolia]: 'sepolia'
+  };
+  if (!testnetNameMap[chain]) {
+    return MAIN_API_BASE_URL;
   }
+  const testnetName: string = testnetNameMap[chain];
+  return `https://api-${testnetName}.etherscan.io/api?module=proxy`;
 }
 
 function getTransactionServiceURL (chain: SupportedChains): string {
