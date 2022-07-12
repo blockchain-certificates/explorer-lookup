@@ -1,32 +1,47 @@
 import request from '../../services/request';
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { buildTransactionServiceUrl } from '../../services/transaction-apis';
-import { BLOCKCHAINS, isTestChain } from '../../constants/blockchains';
+import { BLOCKCHAINS } from '../../constants/blockchains';
 import { TransactionData } from '../../models/transactionData';
 import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
-import { ExplorerAPI, ExplorerURLs, IParsingFunctionAPI } from '../../models/explorers';
+import { ExplorerAPI, IParsingFunctionAPI } from '../../models/explorers';
 import CONFIG from '../../constants/config';
 import { SupportedChains } from '../../constants/supported-chains';
 
 const MAIN_API_BASE_URL = 'https://api.etherscan.io/api?module=proxy';
-const TEST_API_BASE_URL = 'https://api-ropsten.etherscan.io/api?module=proxy';
-const serviceURL: ExplorerURLs = {
-  main: `${MAIN_API_BASE_URL}&action=eth_getTransactionByHash&txhash=${TRANSACTION_ID_PLACEHOLDER}`,
-  test: `${TEST_API_BASE_URL}&action=eth_getTransactionByHash&txhash=${TRANSACTION_ID_PLACEHOLDER}`
-};
+
+function getApiBaseURL (chain: SupportedChains): string {
+  const testnetNameMap = {
+    [SupportedChains.Ethropst]: 'ropsten',
+    [SupportedChains.Ethrinkeby]: 'rinkeby',
+    [SupportedChains.Ethgoerli]: 'goerli',
+    [SupportedChains.Ethsepolia]: 'sepolia'
+  };
+  if (!testnetNameMap[chain]) {
+    return MAIN_API_BASE_URL;
+  }
+  const testnetName: string = testnetNameMap[chain];
+  return `https://api-${testnetName}.etherscan.io/api?module=proxy`;
+}
+
+function getTransactionServiceURL (chain: SupportedChains): string {
+  const baseUrl = getApiBaseURL(chain);
+  return `${baseUrl}&action=eth_getTransactionByHash&txhash=${TRANSACTION_ID_PLACEHOLDER}`;
+}
 
 // TODO: use tests/explorers/mocks/mockEtherscanResponse as type
 async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: IParsingFunctionAPI): Promise<TransactionData> {
+  const baseUrl = getApiBaseURL(chain);
   const getBlockByNumberServiceUrls: Partial<ExplorerAPI> = {
     serviceURL: {
-      main: `${MAIN_API_BASE_URL}&action=eth_getBlockByNumber&boolean=true&tag=${TRANSACTION_ID_PLACEHOLDER}`,
-      test: `${TEST_API_BASE_URL}&action=eth_getBlockByNumber&boolean=true&tag=${TRANSACTION_ID_PLACEHOLDER}`
+      main: `${baseUrl}&action=eth_getBlockByNumber&boolean=true&tag=${TRANSACTION_ID_PLACEHOLDER}`,
+      test: `${baseUrl}&action=eth_getBlockByNumber&boolean=true&tag=${TRANSACTION_ID_PLACEHOLDER}`
     }
   };
   const getBlockNumberServiceUrls: Partial<ExplorerAPI> = {
     serviceURL: {
-      main: `${MAIN_API_BASE_URL}&action=eth_blockNumber`,
-      test: `${TEST_API_BASE_URL}&action=eth_blockNumber`
+      main: `${baseUrl}&action=eth_blockNumber`,
+      test: `${baseUrl}&action=eth_blockNumber`
     }
   };
 
@@ -57,7 +72,7 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
         keyPropertyName
       } as ExplorerAPI,
       transactionId: blockNumber,
-      isTestApi: isTestChain(chain)
+      chain
     });
 
     try {
@@ -80,7 +95,7 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
         key,
         keyPropertyName
       } as ExplorerAPI,
-      isTestApi: isTestChain(chain)
+      chain
     });
 
     let response: string;
@@ -107,7 +122,7 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
 }
 
 export const explorerApi: ExplorerAPI = {
-  serviceURL,
+  serviceURL: getTransactionServiceURL,
   serviceName: TRANSACTION_APIS.etherscan,
   parsingFunction,
   priority: -1
