@@ -10,14 +10,21 @@ function getMockEtherscanResponse (): typeof mockEtherscanResponse {
 }
 
 describe('Etherscan Explorer test suite', function () {
-  let mockResponse;
-
-  beforeEach(function () {
-    mockResponse = getMockEtherscanResponse();
-  });
-
   describe('parsingFunction method', function () {
+    let mockResponse;
+    let stubRequest;
+
+    beforeEach(function () {
+      mockResponse = getMockEtherscanResponse();
+      stubRequest = sinon.stub(RequestServices, 'default');
+    });
+
+    afterEach(function () {
+      stubRequest.restore();
+    });
+
     it('should return the transaction data', async function () {
+      stubRequest.resolves(JSON.stringify(mockResponse));
       const assertionTransactionData: TransactionData = {
         issuingAddress: '0x3d995ef85a8d1bcbed78182ab225b9f88dc8937c',
         remoteHash: 'ec049a808a09f3e8e257401e0898aa3d32a733706fd7d16aacf0ba95f7b42c0c',
@@ -31,10 +38,9 @@ describe('Etherscan Explorer test suite', function () {
 
     describe('given the ether scan block cannot get retrieved', function () {
       it('should throw the right error', async function () {
-        const stubRequest = sinon.stub(RequestServices, 'default').rejects();
+        stubRequest.rejects();
         await expect(explorerApi.parsingFunction({ jsonResponse: mockResponse }))
           .rejects.toThrow('Unable to get remote hash');
-        stubRequest.restore();
       });
     });
   });
