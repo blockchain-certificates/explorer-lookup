@@ -25,10 +25,6 @@ export default async function request (obj: IRequestParameters): Promise<any> {
     const XHR = typeof XMLHttpRequest === 'undefined' ? xhrPolyfill : XMLHttpRequest;
     const request: XMLHttpRequest = new XHR();
 
-    if (obj['bearer-token']) {
-      request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
-    }
-
     request.onload = () => {
       if (request.status >= 200 && request.status < 300) {
         resolve(request.responseText);
@@ -55,6 +51,10 @@ export default async function request (obj: IRequestParameters): Promise<any> {
     };
 
     request.open(obj.method || 'GET', url);
+
+    if (obj['bearer-token']) {
+      request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
+    }
 
     if (obj.body) {
       request.send(JSON.stringify(obj.body));
