@@ -6,6 +6,7 @@ export interface IRequestParameters {
   body?: any;
   forceHttp?: boolean;
   'bearer-token'?: string;
+  'allow-cache'?: boolean; // default false
 }
 
 export default async function request (obj: IRequestParameters): Promise<any> {
@@ -54,6 +55,10 @@ export default async function request (obj: IRequestParameters): Promise<any> {
 
     if (obj['bearer-token']) {
       request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
+    }
+
+    if (!obj['allow-cache']) {
+      request.setRequestHeader('Cache-Control', 'no-cache, no-store, max-age=0');
     }
 
     if (obj.body) {
