@@ -6,7 +6,6 @@ export interface IRequestParameters {
   body?: any;
   forceHttp?: boolean;
   'bearer-token'?: string;
-  'allow-cache'?: boolean; // default false
 }
 
 export default async function request (obj: IRequestParameters): Promise<any> {
@@ -25,6 +24,10 @@ export default async function request (obj: IRequestParameters): Promise<any> {
     // server
     const XHR = typeof XMLHttpRequest === 'undefined' ? xhrPolyfill : XMLHttpRequest;
     const request: XMLHttpRequest = new XHR();
+
+    if (obj['bearer-token']) {
+      request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
+    }
 
     request.onload = () => {
       if (request.status >= 200 && request.status < 300) {
@@ -52,14 +55,6 @@ export default async function request (obj: IRequestParameters): Promise<any> {
     };
 
     request.open(obj.method || 'GET', url);
-
-    if (obj['bearer-token']) {
-      request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
-    }
-
-    if (!obj['allow-cache']) {
-      request.setRequestHeader('Cache-Control', 'no-cache, no-store, max-age=0');
-    }
 
     if (obj.body) {
       request.send(JSON.stringify(obj.body));
