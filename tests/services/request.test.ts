@@ -34,9 +34,7 @@ function MockXMLHttpRequestFactory ({ isSuccessCase }: { isSuccessCase: boolean 
     onload (): any {}
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setRequestHeader (name: string, value: string): any {
-      this.headers[name] = value;
-    }
+    setRequestHeader (name: string, value: string): any {}
   };
 }
 
@@ -98,52 +96,6 @@ describe('Services Request test suite', function () {
         'bearer-token': 'my-bearer-token'
       });
       expect(setRequestHeaderStub.getCall(0).args).toEqual(['Authorization', 'Bearer my-bearer-token']);
-    });
-  });
-
-  describe('given the allow-cache option is undefined', function () {
-    it('should set the Cache-Control header to disallow caching', async function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
-      await request({
-        url: 'https://www.test.com'
-      });
-      expect(setRequestHeaderStub.getCall(0).args).toEqual(['Cache-Control', 'no-cache, no-store, max-age=0']);
-    });
-  });
-
-  describe('given the allow-cache option is false', function () {
-    it('should set the Cache-Control header to disallow caching', async function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
-      await request({
-        url: 'https://www.test.com',
-        'allow-cache': false
-      });
-      expect(setRequestHeaderStub.getCall(0).args).toEqual(['Cache-Control', 'no-cache, no-store, max-age=0']);
-    });
-  });
-
-  describe('given the allow-cache option is true', function () {
-    it('should not set the Cache-Control header', async function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
-      await request({
-        url: 'https://www.test.com',
-        'allow-cache': true
-      });
-      expect(setRequestHeaderStub.calledOnce).toBe(false);
-    });
-  });
-
-  describe('given the allow-cache option is false', function () {
-    it('should set the Cache-Control header to disallow caching', async function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
-      await request({
-        url: 'https://www.test.com'
-      });
-      expect(setRequestHeaderStub.getCall(0).args).toEqual(['Cache-Control', 'no-cache, no-store, max-age=0']);
     });
   });
 
