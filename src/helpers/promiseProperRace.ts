@@ -1,4 +1,3 @@
-// TODO: not tested
 /* eslint-disable */ // this file is just a pain in the ass to lint. Be brave.
 export default async function PromiseProperRace (promises: Array<Promise<any>>, count: number, results = []): Promise<any> {
   // Source: https://blog.jcore.com/2016/12/18/promise-me-you-wont-use-promise-race/
