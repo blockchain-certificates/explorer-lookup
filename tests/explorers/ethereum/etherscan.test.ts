@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import * as mockEtherscanResponse from '../mocks/mockEtherscanResponse.json';
 import { explorerApi } from '../../../src/explorers/ethereum/etherscan';
 import * as RequestServices from '../../../src/services/request';
-import { TransactionData } from '../../../src/models/transactionData';
+import { type TransactionData } from '../../../src/models/transactionData';
 import { SupportedChains } from '../../../src/constants/supported-chains';
 
 function getMockEtherscanResponse (): typeof mockEtherscanResponse {

@@ -1,6 +1,6 @@
-import { SupportedChains } from '../constants/supported-chains';
-import { TransactionData } from './transactionData';
-import { TRANSACTION_APIS } from '../constants/api';
+import { type SupportedChains } from '../constants/supported-chains';
+import { type TransactionData } from './transactionData';
+import { type TRANSACTION_APIS } from '../constants/api';
 
 export interface ExplorerURLs {
   main: string;

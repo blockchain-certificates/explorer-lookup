@@ -2,9 +2,9 @@ import request from '../../services/request';
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { buildTransactionServiceUrl } from '../../services/transaction-apis';
 import { BLOCKCHAINS } from '../../constants/blockchains';
-import { TransactionData } from '../../models/transactionData';
+import { type TransactionData } from '../../models/transactionData';
 import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
-import { ExplorerAPI, IParsingFunctionAPI } from '../../models/explorers';
+import { type ExplorerAPI, type IParsingFunctionAPI } from '../../models/explorers';
 import CONFIG from '../../constants/config';
 import { SupportedChains } from '../../constants/supported-chains';
 

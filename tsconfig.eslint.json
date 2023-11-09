@@ -1,5 +1,9 @@
 {
-  "compilerOptions": { "strict": true },
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true
+  },
   "include": [
     "**/src/**/*.ts",
     "**/tests/**/*.ts"

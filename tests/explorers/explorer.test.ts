@@ -5,17 +5,17 @@ import { explorerApi as BlockcypherAPI } from '../../src/explorers/bitcoin/block
 import * as mockBlockstreamResponse from './mocks/mockBlockstreamResponse.json';
 import { explorerFactory, getTransactionFromApi } from '../../src/explorers/explorer';
 import { BLOCKCHAINS } from '../../src/constants/blockchains';
-import { ExplorerAPI } from '../../src/models/explorers';
+import { type ExplorerAPI } from '../../src/models/explorers';
 import {
   getDefaultExplorers,
   getRPCExplorers,
   overwriteDefaultExplorers,
   prepareExplorerAPIs,
-  TExplorerAPIs
+  type TExplorerAPIs
 } from '../../src/explorers';
 import * as ethRPCExplorer from '../../src/explorers/rpc/ethereum';
 import * as btcRPCExplorer from '../../src/explorers/rpc/bitcoin';
-import { TransactionData } from '../../src/models/transactionData';
+import { type TransactionData } from '../../src/models/transactionData';
 import { TRANSACTION_APIS } from '../../src/constants/api';
 
 describe('Blockchain Explorers test suite', function () {

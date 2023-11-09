@@ -1,7 +1,7 @@
-import { ExplorerAPI } from '../models/explorers';
+import { type ExplorerAPI } from '../models/explorers';
 import { TRANSACTION_ID_PLACEHOLDER } from '../constants/api';
 import { safelyAppendUrlParameter } from '../utils/url';
-import { SupportedChains } from '../constants/supported-chains';
+import { type SupportedChains } from '../constants/supported-chains';
 import { isTestChain } from '../constants/blockchains';
 
 function appendApiIdentifier (url: string, explorerAPI: ExplorerAPI): string {

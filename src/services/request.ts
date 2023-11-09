@@ -54,7 +54,7 @@ export default async function request (obj: IRequestParameters): Promise<any> {
       reject(new Error(request.responseText));
     };
 
-    request.open(obj.method || 'GET', url);
+    request.open(obj.method ?? 'GET', url);
 
     if (obj.body) {
       request.send(JSON.stringify(obj.body));

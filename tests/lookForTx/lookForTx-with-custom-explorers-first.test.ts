@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { TransactionData } from '../../src/models/transactionData';
+import { type TransactionData } from '../../src/models/transactionData';
 import * as explorers from '../../src/explorers';
 import { SupportedChains } from '../../src/constants/supported-chains';
 import lookForTx from '../../src/lookForTx';
