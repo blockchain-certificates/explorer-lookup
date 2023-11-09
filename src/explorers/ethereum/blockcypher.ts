@@ -1,8 +1,8 @@
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { BLOCKCHAINS } from '../../constants/blockchains';
-import { TransactionData } from '../../models/transactionData';
+import { type TransactionData } from '../../models/transactionData';
 import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
-import { ExplorerAPI, ExplorerURLs, IParsingFunctionAPI } from '../../models/explorers';
+import { type ExplorerAPI, type ExplorerURLs, type IParsingFunctionAPI } from '../../models/explorers';
 import CONFIG from '../../constants/config';
 import { dateToUnixTimestamp } from '../../utils/date';
 import { prependHashPrefix } from '../../utils/prependHashPrefix';

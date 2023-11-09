@@ -1,8 +1,8 @@
-import { TransactionData } from '../../models/transactionData';
+import { type TransactionData } from '../../models/transactionData';
 import { stripHashPrefix } from '../../utils/stripHashPrefix';
 import { timestampToDateObject } from '../../utils/date';
 import request from '../../services/request';
-import { IParsingFunctionAPI } from '../../models/explorers';
+import { type IParsingFunctionAPI } from '../../models/explorers';
 
 export async function bitcoinRPCParsingFunction ({ serviceUrl, transactionId }: IParsingFunctionAPI): Promise<TransactionData> {
   const getRawTransactionParams = {

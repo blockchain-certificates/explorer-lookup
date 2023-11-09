@@ -21,7 +21,7 @@ export interface IBlockchainObject {
   };
 }
 
-const BLOCKCHAINS: {[chain in SupportedChains]: IBlockchainObject} = {
+const BLOCKCHAINS: { [chain in SupportedChains]: IBlockchainObject } = {
   [SupportedChains.Bitcoin]: {
     code: SupportedChains.Bitcoin,
     blinkCode: BlinkCodes.btc,
