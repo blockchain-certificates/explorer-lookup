@@ -2,8 +2,10 @@
   "name": "@blockcerts/explorer-lookup",
   "version": "0.0.0-dev",
   "description": "A low level blockchain explorers lookup",
-  "main": "lib/cjs",
-  "module": "lib/esm",
+  "exports": {
+    "import": "./lib/esm/index.js",
+    "require": "./lib/cjs/index.js"
+  },
   "types": "./lib/index.d.ts",
   "dependencies": {
     "xmlhttprequest": "^1.8.0"
