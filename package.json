@@ -17,6 +17,7 @@
     "dts-bundle-generator": "^9.2.4",
     "eslint": "^9.23.0",
     "husky": "^8.0.3",
+    "rimraf": "^6.0.1",
     "semantic-release": "^22.0.7",
     "sinon": "^17.0.1",
     "tslib": "^2.6.2",
