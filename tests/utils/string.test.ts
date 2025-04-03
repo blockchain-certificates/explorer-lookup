@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { capitalize, startsWith } from '../../src/utils/string';
 
 describe('startsWith method', function () {

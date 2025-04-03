@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { dateToUnixTimestamp, timestampToDateObject } from '../../src/utils/date';
 
 describe('dateToUnixTimestamp method', function () {

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { toUTF8Data } from '../../src/utils/data';
 
 describe('toUTF8Data method', function () {

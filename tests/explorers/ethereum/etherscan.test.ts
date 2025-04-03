@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import sinon from 'sinon';
 import * as mockEtherscanResponse from '../mocks/mockEtherscanResponse.json';
 import { explorerApi } from '../../../src/explorers/ethereum/etherscan';

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { prependHashPrefix } from '../../src/utils/prependHashPrefix';
 
 describe('explorers utils cleanupRemoteHash test suite', function () {

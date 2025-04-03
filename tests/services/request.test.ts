@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import request from '../../src/services/request';
 import sinon from 'sinon';
 
@@ -8,7 +9,6 @@ function MockXMLHttpRequestFactory ({ isSuccessCase }: { isSuccessCase: boolean 
     public headers: any = {};
     public headersCase: any = {};
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     open (method: string, url: string): any {}
     send (): any {
       if (isSuccessCase) {
@@ -30,10 +30,8 @@ function MockXMLHttpRequestFactory ({ isSuccessCase }: { isSuccessCase: boolean 
       this.onload();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onload (): any {}
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setRequestHeader (name: string, value: string): any {}
   };
 }

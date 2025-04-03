@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { safelyAppendUrlParameter } from '../../src/utils/url';
 
 describe('safelyAppendUrlParameter method', function () {

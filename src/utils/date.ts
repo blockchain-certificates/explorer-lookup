@@ -66,7 +66,6 @@ export function dateToUnixTimestamp (date: Date | string): any /* Date | string 
   if (date === '') {
     return '';
   }
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   return dateFromIso(`${date}`);
 }
 
