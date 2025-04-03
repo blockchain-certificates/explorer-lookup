@@ -1,4 +1,4 @@
-import sinon from 'sinon';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { type TransactionData } from '../../src/models/transactionData';
 import * as explorers from '../../src/explorers';
 import { SupportedChains } from '../../src/constants/supported-chains';
@@ -21,14 +21,14 @@ describe('lookForTx test suite', function () {
   };
 
   describe('given it is invoked with custom explorers with priority 0', function () {
-    let stubbedCustomExplorer: sinon.SinonStub;
-    let stubbedDefaultExplorer: sinon.SinonStub;
-    let stubbedPrepareExplorerAPIs: sinon.SinonStub;
+    let stubbedCustomExplorer: ReturnType<typeof vi.fn>;
+    let stubbedDefaultExplorer: ReturnType<typeof vi.fn>;
+    let stubbedPrepareExplorerAPIs: ReturnType<typeof vi.spyOn>;
     let mockExplorers: explorers.TExplorerAPIs;
 
     beforeEach(function () {
-      stubbedCustomExplorer = sinon.stub().resolves(fixtureCustomTxData);
-      stubbedDefaultExplorer = sinon.stub().resolves(fixtureDefaultTxData);
+      stubbedCustomExplorer = vi.fn().mockResolvedValue(fixtureCustomTxData);
+      stubbedDefaultExplorer = vi.fn().mockResolvedValue(fixtureDefaultTxData);
       mockExplorers = {
         bitcoin: [{
           getTxData: stubbedDefaultExplorer,
@@ -40,13 +40,13 @@ describe('lookForTx test suite', function () {
           priority: 0
         }]
       };
-      stubbedPrepareExplorerAPIs = sinon.stub(explorers, 'prepareExplorerAPIs').returns(mockExplorers);
+      stubbedPrepareExplorerAPIs = vi.spyOn(explorers, 'prepareExplorerAPIs').mockReturnValue(mockExplorers);
     });
 
     afterEach(function () {
-      stubbedCustomExplorer.resetHistory();
-      stubbedDefaultExplorer.resetHistory();
-      stubbedPrepareExplorerAPIs.restore();
+      stubbedCustomExplorer.mockReset();
+      stubbedDefaultExplorer.mockReset();
+      stubbedPrepareExplorerAPIs.mockRestore();
     });
 
     describe('given the custom explorers return the transaction', function () {
@@ -65,11 +65,11 @@ describe('lookForTx test suite', function () {
       });
 
       it('should have called the custom explorers', function () {
-        expect(stubbedCustomExplorer.calledOnce).toBe(true);
+        expect(stubbedCustomExplorer).toHaveBeenCalledTimes(1);
       });
 
       it('should not have called the default explorers', function () {
-        expect(stubbedDefaultExplorer.calledOnce).toBe(false);
+        expect(stubbedDefaultExplorer).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -77,7 +77,7 @@ describe('lookForTx test suite', function () {
       let response: TransactionData;
 
       beforeEach(async function () {
-        stubbedCustomExplorer.rejects();
+        stubbedCustomExplorer.mockRejectedValue(new Error('Custom explorer failed'));
         response = await lookForTx({
           transactionId: MOCK_TRANSACTION_ID,
           chain: SupportedChains.Bitcoin,
@@ -90,11 +90,11 @@ describe('lookForTx test suite', function () {
       });
 
       it('should have called the custom explorers', function () {
-        expect(stubbedCustomExplorer.calledOnce).toBe(true);
+        expect(stubbedCustomExplorer).toHaveBeenCalledTimes(1);
       });
 
       it('should have called the default explorers', function () {
-        expect(stubbedDefaultExplorer.calledOnce).toBe(true);
+        expect(stubbedDefaultExplorer).toHaveBeenCalledTimes(1);
       });
     });
   });

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import sinon from 'sinon';
 import * as request from '../../../src/services/request';
 import { bitcoinRPCParsingFunction } from '../../../src/explorers/rpc/bitcoin';

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { type ExplorerAPI } from '../../src/models/explorers';
 import { type TransactionData } from '../../src/models/transactionData';
 import ensureExplorerAPIValidity from '../../src/utils/ensureExplorerAPIValidity';

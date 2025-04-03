@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import sinon from 'sinon';
 import * as RequestService from '../../src/services/request';
 import { explorerApi as BlockstreamAPI } from '../../src/explorers/bitcoin/blockstream';
@@ -179,12 +180,12 @@ describe('Blockchain Explorers test suite', function () {
         };
 
         const rpcFunctionName = 'ethereumRPCParsingFunction';
-        sinon.stub(ethRPCExplorer, rpcFunctionName).resolves(`${rpcFunctionName} was called` as any);
+        vi.spyOn(ethRPCExplorer, rpcFunctionName).mockResolvedValue(`${rpcFunctionName} was called` as any);
 
         const explorers = getRPCExplorers([fixtureExplorer]);
         const testOutput = await explorers.custom[0].getTxData('test');
         expect(testOutput).toBe(`${rpcFunctionName} was called`);
-        sinon.restore();
+        vi.restoreAllMocks();
       });
     });
 
@@ -197,12 +198,12 @@ describe('Blockchain Explorers test suite', function () {
         };
 
         const rpcFunctionName = 'ethereumRPCParsingFunction';
-        sinon.stub(ethRPCExplorer, rpcFunctionName).resolves(`${rpcFunctionName} was called` as any);
+        vi.spyOn(ethRPCExplorer, rpcFunctionName).mockResolvedValue(`${rpcFunctionName} was called` as any);
 
         const explorers = getRPCExplorers([fixtureExplorer]);
         const testOutput = await explorers.custom[0].getTxData('test');
         expect(testOutput).toBe(`${rpcFunctionName} was called`);
-        sinon.restore();
+        vi.restoreAllMocks();
       });
     });
 
@@ -215,12 +216,12 @@ describe('Blockchain Explorers test suite', function () {
         };
 
         const rpcFunctionName = 'bitcoinRPCParsingFunction';
-        sinon.stub(btcRPCExplorer, rpcFunctionName).resolves(`${rpcFunctionName} was called` as any);
+        vi.spyOn(btcRPCExplorer, rpcFunctionName).mockResolvedValue(`${rpcFunctionName} was called` as any);
 
         const explorers = getRPCExplorers([fixtureExplorer]);
         const testOutput = await explorers.custom[0].getTxData('test', '' as any);
         expect(testOutput).toBe(`${rpcFunctionName} was called`);
-        sinon.restore();
+        vi.restoreAllMocks();
       });
     });
 
@@ -232,12 +233,12 @@ describe('Blockchain Explorers test suite', function () {
         };
 
         const rpcFunctionName = 'ethereumRPCParsingFunction';
-        sinon.stub(ethRPCExplorer, rpcFunctionName).resolves(`${rpcFunctionName} was called` as any);
+        vi.spyOn(ethRPCExplorer, rpcFunctionName).mockResolvedValue(`${rpcFunctionName} was called` as any);
 
         const explorers = getRPCExplorers([fixtureExplorer]);
         const testOutput = await explorers.custom[0].getTxData('test');
         expect(testOutput).toBe(`${rpcFunctionName} was called`);
-        sinon.restore();
+        vi.restoreAllMocks();
       });
     });
 

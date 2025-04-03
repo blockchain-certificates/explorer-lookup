@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { type TransactionData } from '../../../src/models/transactionData';
 import { explorerApi as BlockcyperETHApi } from '../../../src/explorers/ethereum/blockcypher';
 
@@ -53,7 +54,7 @@ describe('Blockcypher Ethereum explorer test suite', function () {
         time: new Date('2018-06-01T20:47:55.000Z')
       };
 
-      const output: TransactionData = await BlockcyperETHApi.parsingFunction({ jsonResponse: responseData });
+      const output = await BlockcyperETHApi.parsingFunction({ jsonResponse: responseData });
 
       expect(output).toEqual(expectedOutput);
     });

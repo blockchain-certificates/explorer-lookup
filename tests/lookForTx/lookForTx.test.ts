@@ -1,4 +1,4 @@
-import sinon from 'sinon';
+import { describe, it, expect, vi } from 'vitest';
 import { SupportedChains } from '../../src/constants/supported-chains';
 import * as explorers from '../../src/explorers';
 import { type TransactionData } from '../../src/models/transactionData';
@@ -16,20 +16,20 @@ describe('lookForTx test suite', function () {
         remoteHash: 'a-remote-hash',
         issuingAddress: 'an-issuing-address'
       };
-      const stubbedExplorer = sinon.stub().resolves(mockTxData);
+      const stubbedExplorer = vi.fn().mockResolvedValue(mockTxData);
       const mockExplorers: explorers.TExplorerAPIs = {
         bitcoin: [{
           getTxData: stubbedExplorer
         }],
         ethereum: []
       };
-      const stubPrepareExplorerAPIs: sinon.SinonStub = sinon.stub(explorers, 'prepareExplorerAPIs').returns(mockExplorers);
+      const stubPrepareExplorerAPIs = vi.spyOn(explorers, 'prepareExplorerAPIs').mockReturnValue(mockExplorers);
       const output = await lookForTx({
         transactionId: 'a-transaction-id',
         chain: SupportedChains.Bitcoin
       });
       expect(output).toEqual(mockTxData);
-      stubPrepareExplorerAPIs.restore();
+      stubPrepareExplorerAPIs.mockRestore();
     });
   });
 
