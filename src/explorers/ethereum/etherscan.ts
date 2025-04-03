@@ -65,7 +65,6 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
     const data = jsonResponse.result;
     const blockNumber = data.blockNumber;
     const requestUrl = buildTransactionServiceUrl({
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       explorerAPI: {
         ...getBlockByNumberServiceUrls,
         key,
@@ -89,7 +88,6 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
 
   async function checkEtherScanConfirmations (chain: SupportedChains, blockNumber: number): Promise<number> {
     const requestUrl: string = buildTransactionServiceUrl({
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       explorerAPI: {
         ...getBlockNumberServiceUrls,
         key,

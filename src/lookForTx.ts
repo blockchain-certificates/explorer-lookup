@@ -27,7 +27,6 @@ export function getExplorersByChain (chain: SupportedChains, explorerAPIs: TExpl
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/promise-function-async
 async function runPromiseRace (promises): Promise<TransactionData> {
   let winners;
   try {
@@ -37,7 +36,6 @@ async function runPromiseRace (promises): Promise<TransactionData> {
   }
 
   if (!winners || winners.length === 0) {
-    // eslint-disable-next-line @typescript-eslint/return-await
     throw new Error('Could not confirm transaction data.');
   }
 
