@@ -21,7 +21,8 @@ describe('ensureExplorerAPIValidity test suite', function () {
     it('should throw the right error', function () {
       expect(() => {
         ensureExplorerAPIValidity(fixtureExplorerAPIs);
-      }).toThrow('One or more of your custom explorer APIs has a priority set below zero');
+      }).toThrow('One or more of your custom explorer APIs has a priority set below 0 or above 1. ' +
+        'Use 0 to give precedence to custom explorers over the default ones, or 1 for the contrary.');
     });
   });
 
@@ -35,7 +36,8 @@ describe('ensureExplorerAPIValidity test suite', function () {
     it('should throw the right error', function () {
       expect(() => {
         ensureExplorerAPIValidity(fixtureExplorerAPIs);
-      }).toThrow('One or more of your custom explorer APIs does not have a parsing function');
+      }).toThrow('One or more of your custom explorer APIs does not have a parsing function. ' +
+        'Parsing functions are required to convert the data received from the explorer.');
     });
   });
 

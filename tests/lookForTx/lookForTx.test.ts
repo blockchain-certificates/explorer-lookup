@@ -4,12 +4,13 @@ import * as explorers from '../../src/explorers';
 import { type TransactionData } from '../../src/models/transactionData';
 import CONFIG from '../../src/constants/config';
 import lookForTx, { getExplorersByChain } from '../../src/lookForTx';
+import { ExplorerAPI } from '../../src/models/Explorers';
 
 describe('lookForTx test suite', function () {
   const MOCK_TRANSACTION_ID = 'mock-transaction-id';
 
   describe('given there are no custom explorers', function () {
-    it('should call and resolve from the explorers passed', async function () {
+    it('should call and resolve from the default explorers', async function () {
       const mockTxData: TransactionData = {
         revokedAddresses: [],
         time: '2020-04-20T00:00:00Z',
@@ -33,7 +34,56 @@ describe('lookForTx test suite', function () {
     });
   });
 
-  describe('given it is called with a transactionId, a chain and a certificateVersion', function () {
+  describe('given some custom explorers are passed', function () {
+    describe('when it is a valid custom explorer API object', function () {
+      describe('and the custom explorer API is set an invalid priority', function () {
+        it('should throw an error', async function () {
+          const fixtureExplorerAPI: ExplorerAPI[] = [{
+            serviceURL: 'https://explorer-example.com',
+            priority: -1,
+            parsingFunction: (): TransactionData => {
+              return {
+                remoteHash: 'a',
+                issuingAddress: 'b',
+                time: 'c',
+                revokedAddresses: ['d']
+              };
+            }
+          }];
+
+          await expect(async () => {
+            await lookForTx({
+              transactionId: 'a-transaction-id',
+              chain: SupportedChains.Bitcoin,
+              explorerAPIs: fixtureExplorerAPI
+            });
+          }).rejects.toThrow('One or more of your custom explorer APIs has a priority set below 0 or above 1. ' +
+            'Use 0 to give precedence to custom explorers over the default ones, or 1 for the contrary.');
+        });
+      });
+
+      describe('and the custom explorer API has a missing parsing function', function () {
+        it('should throw an error', async function () {
+          const fixtureExplorerAPI: ExplorerAPI[] = [{
+            serviceURL: 'https://explorer-example.com',
+            priority: 0,
+            parsingFunction: undefined
+          }];
+
+          await expect(async () => {
+            await lookForTx({
+              transactionId: 'a-transaction-id',
+              chain: SupportedChains.Bitcoin,
+              explorerAPIs: fixtureExplorerAPI
+            });
+          }).rejects.toThrow('One or more of your custom explorer APIs does not have a parsing function. ' +
+            'Parsing functions are required to convert the data received from the explorer.');
+        });
+      });
+    });
+  });
+
+  describe('given it is called with a transactionId and a chain', function () {
     describe('given the chain is invalid', function () {
       it('should throw an error', async function () {
         await expect(lookForTx({
