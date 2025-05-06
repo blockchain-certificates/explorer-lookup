@@ -31,23 +31,23 @@ describe('Blockchain Explorers test suite', function () {
   };
 
   beforeEach(function () {
-    stubRequest = sinon.stub(RequestService, 'default').resolves(JSON.stringify(mockBlockstreamResponse));
+    stubRequest = vi.spyOn(RequestService, 'default').mockResolvedValue(JSON.stringify(mockBlockstreamResponse));
   });
 
   afterEach(function () {
-    stubRequest.restore();
+    vi.restoreAllMocks();
   });
 
   describe('getTransactionFromApi method', function () {
     it('should call the right request API', async function () {
       await getTransactionFromApi(BlockstreamAPI, fixtureTransactionId, BLOCKCHAINS.bitcoin.code);
-      expect(stubRequest.getCall(0).args).toEqual([{ url: assertionRequestUrl }]);
+      expect(stubRequest).toHaveBeenCalledWith({ url: assertionRequestUrl });
     });
 
     describe('given the API request failed', function () {
       it('should throw the right error', async function () {
         const fixtureError = new Error('Unable to get remote hash');
-        stubRequest.rejects(fixtureError);
+        stubRequest.mockRejectedValue(fixtureError);
         await expect(getTransactionFromApi(BlockstreamAPI, fixtureTransactionId, BLOCKCHAINS.bitcoin.code))
           .rejects.toThrow('Unable to get remote hash');
       });

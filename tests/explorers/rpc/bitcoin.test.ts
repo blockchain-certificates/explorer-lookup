@@ -1,5 +1,4 @@
-import { describe, it, expect } from 'vitest';
-import sinon from 'sinon';
+import { describe, it, expect, vi } from 'vitest';
 import * as request from '../../../src/services/request';
 import { bitcoinRPCParsingFunction } from '../../../src/explorers/rpc/bitcoin';
 
@@ -8,11 +7,11 @@ const getRawTransactionResponse = '{"result":{"txid":"d75b7a5bdb3d5244b753e6b84e
 describe('Bitcoin RPC response parsing test suite', function () {
   describe('given it is called with a transactionId and a server URL', function () {
     it('should retrieve the transaction data', async function () {
-      const requestStub: sinon.SinonStub = sinon.stub(request, 'default');
+      const requestStub = vi.spyOn(request, 'default');
       const transactionId = 'd75b7a5bdb3d5244b753e6b84e987267cfa4ffa7a532a2ed49ad3848be1d82f8';
       const serviceUrl = 'a-btc-rpc-url.com';
 
-      requestStub.onCall(0).resolves(getRawTransactionResponse);
+      requestStub.mockResolvedValueOnce(getRawTransactionResponse);
 
       const output = await bitcoinRPCParsingFunction({ serviceUrl, transactionId });
       expect(output).toEqual({
@@ -21,7 +20,7 @@ describe('Bitcoin RPC response parsing test suite', function () {
         time: new Date('2017-06-29T22:10:29.000Z'),
         revokedAddresses: ['msBCHdwaQ7N2ypBYupkp6uNxtr9Pg76imj']
       });
-      requestStub.restore();
+      vi.restoreAllMocks();
     });
   });
 });
