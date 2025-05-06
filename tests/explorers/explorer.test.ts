@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import sinon from 'sinon';
 import * as RequestService from '../../src/services/request';
 import { explorerApi as BlockstreamAPI } from '../../src/explorers/bitcoin/blockstream';
 import { explorerApi as BlockcypherAPI } from '../../src/explorers/bitcoin/blockcypher';
@@ -251,12 +250,12 @@ describe('Blockchain Explorers test suite', function () {
         };
 
         const rpcFunctionName = 'ethereumRPCParsingFunction';
-        sinon.stub(ethRPCExplorer, rpcFunctionName).resolves(`${rpcFunctionName} was called` as any);
+        const stub = vi.spyOn(ethRPCExplorer, rpcFunctionName).mockResolvedValue(`${rpcFunctionName} was called` as any);
 
         const explorers = getRPCExplorers([fixtureExplorer]);
         const testOutput = await explorers.custom[0].getTxData('test');
         expect(testOutput).toBe('custom function was called');
-        sinon.restore();
+        stub.mockRestore();
       });
     });
   });

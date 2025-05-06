@@ -1,16 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import request from '../../src/services/request';
-import sinon from 'sinon';
 
-function MockXMLHttpRequestFactory ({ isSuccessCase }: { isSuccessCase: boolean }): any {
+function MockXMLHttpRequestFactory({ isSuccessCase }: { isSuccessCase: boolean }): any {
   return class MockXMLHttpRequest {
     public status: number;
     public responseText: string;
     public headers: any = {};
     public headersCase: any = {};
 
-    open (method: string, url: string): any {}
-    send (): any {
+    open(method: string, url: string): any {}
+    send(): any {
       if (isSuccessCase) {
         this.onloadSuccess();
       } else {
@@ -18,21 +17,21 @@ function MockXMLHttpRequestFactory ({ isSuccessCase }: { isSuccessCase: boolean 
       }
     }
 
-    onloadFailure (): void {
+    onloadFailure(): void {
       this.status = 500;
       this.responseText = 'failure test case';
       this.onload();
     }
 
-    onloadSuccess (): void {
+    onloadSuccess(): void {
       this.status = 200;
       this.responseText = 'success';
       this.onload();
     }
 
-    onload (): any {}
+    onload(): any {}
 
-    setRequestHeader (name: string, value: string): any {}
+    setRequestHeader(name: string, value: string): any {}
   };
 }
 
@@ -47,7 +46,7 @@ describe('Services Request test suite', function () {
   });
 
   afterEach(function () {
-    sinon.restore();
+    vi.restoreAllMocks();
     global.XMLHttpRequest = globalXhr;
   });
 
@@ -63,15 +62,14 @@ describe('Services Request test suite', function () {
     let openStub;
 
     beforeEach(function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      openStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'open');
+      openStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'open');
     });
 
     it('should upgrade the protocol to HTTPS', async function () {
       await request({
         url: 'http://www.test.com'
       });
-      expect(openStub.getCall(0).args[1]).toBe('https://www.test.com');
+      expect(openStub).toHaveBeenCalledWith('GET', 'https://www.test.com');
     });
 
     describe('and the forceHttp flag is true', function () {
@@ -80,20 +78,19 @@ describe('Services Request test suite', function () {
           url: 'http://www.test.com',
           forceHttp: true
         });
-        expect(openStub.getCall(0).args[1]).toBe('http://www.test.com');
+        expect(openStub).toHaveBeenCalledWith('GET', 'http://www.test.com');
       });
     });
   });
 
   describe('given a bearer token option is passed', function () {
     it('should set the header with the bearer token value', async function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      const setRequestHeaderStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
+      const setRequestHeaderStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
       await request({
         url: 'https://www.test.com',
         'bearer-token': 'my-bearer-token'
       });
-      expect(setRequestHeaderStub.getCall(0).args).toEqual(['Authorization', 'Bearer my-bearer-token']);
+      expect(setRequestHeaderStub).toHaveBeenCalledWith('Authorization', 'Bearer my-bearer-token');
     });
   });
 
@@ -101,8 +98,7 @@ describe('Services Request test suite', function () {
     let openStub;
 
     beforeEach(function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      openStub = sinon.stub<[string, string]>(MockXMLHttpRequestSuccess.prototype, 'open');
+      openStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'open');
     });
 
     describe('given a method option is passed', function () {
@@ -111,7 +107,7 @@ describe('Services Request test suite', function () {
           url: 'https://www.test.com',
           method: 'POST'
         });
-        expect(openStub.getCall(0).args[0]).toEqual('POST');
+        expect(openStub).toHaveBeenCalledWith('POST', 'https://www.test.com');
       });
     });
 
@@ -120,41 +116,45 @@ describe('Services Request test suite', function () {
         await request({
           url: 'https://www.test.com'
         });
-        expect(openStub.getCall(0).args[0]).toEqual('GET');
+        expect(openStub).toHaveBeenCalledWith('GET', 'https://www.test.com');
       });
     });
   });
 
   describe('body option', function () {
-    let sendStub;
+  let sendStub;
 
-    beforeEach(function () {
-      // @ts-expect-error open takes params but does not pick them up from the class definition and TS complains...
-      sendStub = sinon.stub<[string]>(MockXMLHttpRequestSuccess.prototype, 'send').callThrough();
-    });
-
-    describe('given the body option is set', function () {
-      it('should send the body', async function () {
-        const body = {
-          test: true
-        };
-        await request({
-          url: 'https://www.test.com',
-          body
-        });
-        expect(sendStub.getCall(0).args[0]).toBe(JSON.stringify(body));
-      });
-    });
-
-    describe('given the body option is not set', function () {
-      it('should send nothing', async function () {
-        await request({
-          url: 'https://www.test.com'
-        });
-        expect(sendStub.getCall(0).args[0]).toBeUndefined();
-      });
+  beforeEach(function () {
+    sendStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'send').mockImplementation(function () {
+      // Simulate the request lifecycle by triggering the onload callback
+      this.status = 200; // Simulate a successful response
+      this.responseText = 'success'; // Simulate a response body
+      this.onload();
     });
   });
+
+  describe('given the body option is set', function () {
+    it('should send the body', async function () {
+      const body = {
+        test: true
+      };
+      await request({
+        url: 'https://www.test.com',
+        body
+      });
+      expect(sendStub).toHaveBeenCalledWith(JSON.stringify(body));
+    });
+  });
+
+  describe('given the body option is not set', function () {
+    it('should send nothing', async function () {
+      await request({
+        url: 'https://www.test.com'
+      });
+      expect(sendStub).toHaveBeenCalledWith();
+    });
+  });
+});
 
   describe('onload method', function () {
     describe('given the response status is 2xx', function () {
