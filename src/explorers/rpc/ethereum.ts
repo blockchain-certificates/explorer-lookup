@@ -1,6 +1,6 @@
+import { stripHashPrefix } from '../../utils/stripHashPrefix.js';
+import request from '../../services/request.js';
 import { type TransactionData } from '../../models/transactionData';
-import { stripHashPrefix } from '../../utils/stripHashPrefix';
-import request from '../../services/request';
 import { type IParsingFunctionAPI } from '../../models/explorers';
 
 export async function ethereumRPCParsingFunction ({ serviceUrl, transactionId }: IParsingFunctionAPI): Promise<TransactionData> {

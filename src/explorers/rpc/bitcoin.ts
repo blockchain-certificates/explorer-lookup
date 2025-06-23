@@ -1,7 +1,7 @@
+import { stripHashPrefix } from '../../utils/stripHashPrefix.js';
+import { timestampToDateObject } from '../../utils/date.js';
+import request from '../../services/request.js';
 import { type TransactionData } from '../../models/transactionData';
-import { stripHashPrefix } from '../../utils/stripHashPrefix';
-import { timestampToDateObject } from '../../utils/date';
-import request from '../../services/request';
 import { type IParsingFunctionAPI } from '../../models/explorers';
 
 export async function bitcoinRPCParsingFunction ({ serviceUrl, transactionId }: IParsingFunctionAPI): Promise<TransactionData> {

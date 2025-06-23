@@ -1,4 +1,4 @@
-import { startsWith } from './string';
+import { startsWith } from './string.js';
 
 export function prependHashPrefix (remoteHash: string, prefixes: string[]): string {
   for (let i = 0; i < prefixes.length; i++) {

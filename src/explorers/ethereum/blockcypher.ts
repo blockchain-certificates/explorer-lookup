@@ -1,11 +1,11 @@
-import { stripHashPrefix } from '../../utils/stripHashPrefix';
-import { BLOCKCHAINS } from '../../constants/blockchains';
-import { type TransactionData } from '../../models/transactionData';
-import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
+import { stripHashPrefix } from '../../utils/stripHashPrefix.js';
+import { BLOCKCHAINS } from '../../constants/blockchains.js';
+import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api.js';
+import CONFIG from '../../constants/config.js';
+import { dateToUnixTimestamp } from '../../utils/date.js';
+import { prependHashPrefix } from '../../utils/prependHashPrefix.js';
 import { type ExplorerAPI, type ExplorerURLs, type IParsingFunctionAPI } from '../../models/explorers';
-import CONFIG from '../../constants/config';
-import { dateToUnixTimestamp } from '../../utils/date';
-import { prependHashPrefix } from '../../utils/prependHashPrefix';
+import { type TransactionData } from '../../models/transactionData';
 
 const serviceURL: ExplorerURLs = {
   main: `https://api.blockcypher.com/v1/eth/main/txs/${TRANSACTION_ID_PLACEHOLDER}?limit=500`,

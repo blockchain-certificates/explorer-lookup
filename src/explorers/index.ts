@@ -2,11 +2,11 @@ import {
   BitcoinTransactionAPIArray as BitcoinExplorers,
   EthereumTransactionAPIArray as EthereumExplorers,
   explorerFactory
-} from './explorer';
-import { TRANSACTION_APIS } from '../constants/api';
+} from './explorer.js';
+import { TRANSACTION_APIS } from '../constants/api.js';
+import { ethereumRPCParsingFunction } from './rpc/ethereum.js';
+import { bitcoinRPCParsingFunction } from './rpc/bitcoin.js';
 import { type ExplorerAPI, type TExplorerFunctionsArray } from '../models/explorers';
-import { ethereumRPCParsingFunction } from './rpc/ethereum';
-import { bitcoinRPCParsingFunction } from './rpc/bitcoin';
 
 export interface TDefaultExplorersPerBlockchain {
   bitcoin: TExplorerFunctionsArray;

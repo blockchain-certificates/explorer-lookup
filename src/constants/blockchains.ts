@@ -1,5 +1,5 @@
-import { TRANSACTION_ID_PLACEHOLDER } from './api';
-import { SupportedChains } from './supported-chains';
+import { TRANSACTION_ID_PLACEHOLDER } from './api.js';
+import { SupportedChains } from './supported-chains.js';
 
 // TODO: ideally this list comes from @vaultie/lds-merkle-proof-2019 from the Keymap definition
 enum BlinkCodes {
