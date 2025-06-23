@@ -1,7 +1,7 @@
-import lookForTx from './lookForTx';
-import request from './services/request';
-import { BLOCKCHAINS, isTestChain } from './constants/blockchains';
-import { SupportedChains } from './constants/supported-chains';
+import lookForTx from './lookForTx.js';
+import request from './services/request.js';
+import { BLOCKCHAINS, isTestChain } from './constants/blockchains.js';
+import { SupportedChains } from './constants/supported-chains.js';
 
 export {
   lookForTx,

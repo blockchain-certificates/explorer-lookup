@@ -1,9 +1,9 @@
-import { stripHashPrefix } from '../../utils/stripHashPrefix';
-import { timestampToDateObject } from '../../utils/date';
+import { stripHashPrefix } from '../../utils/stripHashPrefix.js';
+import { timestampToDateObject } from '../../utils/date.js';
+import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api.js';
+import { BLOCKCHAINS } from '../../constants/blockchains.js';
 import { type ExplorerAPI, type ExplorerURLs, type IParsingFunctionAPI } from '../../models/explorers';
 import { type TransactionData } from '../../models/transactionData';
-import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
-import { BLOCKCHAINS } from '../../constants/blockchains';
 
 // TODO: use tests/explorers/mocks/mockBlockstreamResponse as type
 function parsingFunction ({ jsonResponse }: IParsingFunctionAPI): TransactionData {

@@ -1,12 +1,12 @@
-import request from '../../services/request';
-import { stripHashPrefix } from '../../utils/stripHashPrefix';
-import { buildTransactionServiceUrl } from '../../services/transaction-apis';
-import { BLOCKCHAINS } from '../../constants/blockchains';
+import request from '../../services/request.js';
+import { stripHashPrefix } from '../../utils/stripHashPrefix.js';
+import { buildTransactionServiceUrl } from '../../services/transaction-apis.js';
+import { BLOCKCHAINS } from '../../constants/blockchains.js';
+import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api.js';
+import CONFIG from '../../constants/config.js';
+import { SupportedChains } from '../../constants/supported-chains.js';
 import { type TransactionData } from '../../models/transactionData';
-import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
 import { type ExplorerAPI, type IParsingFunctionAPI } from '../../models/explorers';
-import CONFIG from '../../constants/config';
-import { SupportedChains } from '../../constants/supported-chains';
 
 const MAIN_API_BASE_URL = 'https://api.etherscan.io/api?module=proxy';
 

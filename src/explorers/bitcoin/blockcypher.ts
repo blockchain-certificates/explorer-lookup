@@ -3,8 +3,8 @@ import { dateToUnixTimestamp } from '../../utils/date';
 import { type ExplorerAPI, type ExplorerURLs, type IParsingFunctionAPI } from '../../models/explorers';
 import { type TransactionData } from '../../models/transactionData';
 import { TRANSACTION_APIS, TRANSACTION_ID_PLACEHOLDER } from '../../constants/api';
-import CONFIG from '../../constants/config';
-import { BLOCKCHAINS } from '../../constants/blockchains';
+import CONFIG from '../../constants/config.js';
+import { BLOCKCHAINS } from '../../constants/blockchains.js';
 
 // TODO: use tests/explorers/mocks/mockBlockcypher as type
 function parsingFunction ({ jsonResponse }: IParsingFunctionAPI): TransactionData {
