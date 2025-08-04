@@ -44,7 +44,7 @@ describe('Transaction APIs test suite', function () {
           expect(buildTransactionServiceUrl({
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId
-          })).toEqual(`https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+          })).toEqual(`https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
         });
       });
 
@@ -54,27 +54,31 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId,
             chain: SupportedChains.Ethmain
-          })).toEqual(`https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+          })).toEqual(`https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
         });
       });
 
       describe('given chain is set to the ropsten', function () {
-        it('should return the ropsten address with the transaction ID', function () {
-          expect(buildTransactionServiceUrl({
-            explorerAPI: fixtureApi,
-            transactionId: fixtureTransactionId,
-            chain: SupportedChains.Ethropst
-          })).toEqual(`https://api-ropsten.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        it('should throw', function () {
+          expect(() => {
+            buildTransactionServiceUrl({
+              explorerAPI: fixtureApi,
+              transactionId: fixtureTransactionId,
+              chain: SupportedChains.Ethropst,
+            });
+          }).toThrow("Unsupported chain: ethropst");
         });
       });
 
       describe('given chain is set to the rinkeby', function () {
-        it('should return the rinkeby address with the transaction ID', function () {
-          expect(buildTransactionServiceUrl({
-            explorerAPI: fixtureApi,
-            transactionId: fixtureTransactionId,
-            chain: SupportedChains.Ethrinkeby
-          })).toEqual(`https://api-rinkeby.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+        it('should throw', function () {
+          expect(() => {
+            buildTransactionServiceUrl({
+              explorerAPI: fixtureApi,
+              transactionId: fixtureTransactionId,
+              chain: SupportedChains.Ethropst,
+            });
+          }).toThrow("Unsupported chain: ethropst");
         });
       });
 
@@ -84,7 +88,7 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId,
             chain: SupportedChains.Ethgoerli
-          })).toEqual(`https://api-goerli.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+          })).toEqual(`https://api.etherscan.io/v2/api?chainid=5&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
         });
       });
 
@@ -94,7 +98,7 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId,
             chain: SupportedChains.Ethsepolia
-          })).toEqual(`https://api-sepolia.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+          })).toEqual(`https://api.etherscan.io/v2/api?chainid=11155111&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
         });
       });
 
@@ -125,7 +129,7 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId
           });
-          const expectedOutput = `https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}&apikey=${fixtureAPIToken}`;
+          const expectedOutput = `https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}&apikey=${fixtureAPIToken}`;
           expect(output).toBe(expectedOutput);
         });
       });

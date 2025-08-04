@@ -32,7 +32,7 @@ describe('Etherscan Explorer test suite', function () {
         time: new Date('2019-06-02T08:38:26.000Z')
       };
 
-      const res = await explorerApi.parsingFunction({ jsonResponse: mockResponse, chain: SupportedChains.Ethropst });
+      const res = await explorerApi.parsingFunction({ jsonResponse: mockResponse, chain: SupportedChains.Ethsepolia });
       expect(res).toEqual(assertionTransactionData);
     });
 

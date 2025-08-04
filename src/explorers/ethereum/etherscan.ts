@@ -8,20 +8,18 @@ import { SupportedChains } from '../../constants/supported-chains.js';
 import { type TransactionData } from '../../models/transactionData';
 import { type ExplorerAPI, type IParsingFunctionAPI } from '../../models/explorers';
 
-const MAIN_API_BASE_URL = 'https://api.etherscan.io/api?module=proxy';
+const ETHEREUM_CHAIN_IDS: Partial<Record<SupportedChains, number>> = {
+  [SupportedChains.Ethmain]: 1,
+  [SupportedChains.Ethgoerli]: 5,
+  [SupportedChains.Ethsepolia]: 11155111,
+} as const;
 
-function getApiBaseURL (chain: SupportedChains): string {
-  const testnetNameMap = {
-    [SupportedChains.Ethropst]: 'ropsten',
-    [SupportedChains.Ethrinkeby]: 'rinkeby',
-    [SupportedChains.Ethgoerli]: 'goerli',
-    [SupportedChains.Ethsepolia]: 'sepolia'
-  };
-  if (!testnetNameMap[chain]) {
-    return MAIN_API_BASE_URL;
+function getApiBaseURL(chain: SupportedChains = SupportedChains.Ethmain): string {
+  const chainId = ETHEREUM_CHAIN_IDS[chain];
+  if (!chainId) {
+    throw new Error(`Unsupported chain: ${chain}`);
   }
-  const testnetName: string = testnetNameMap[chain];
-  return `https://api-${testnetName}.etherscan.io/api?module=proxy`;
+  return `https://api.etherscan.io/v2/api?chainid=${chainId}&module=proxy`;
 }
 
 function getTransactionServiceURL (chain: SupportedChains): string {
