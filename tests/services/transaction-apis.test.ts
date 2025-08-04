@@ -44,7 +44,7 @@ describe('Transaction APIs test suite', function () {
           expect(buildTransactionServiceUrl({
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId
-          })).toEqual(`https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+          })).toEqual(`https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
         });
       });
 
@@ -54,7 +54,7 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId,
             chain: SupportedChains.Ethmain
-          })).toEqual(`https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
+          })).toEqual(`https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}`);
         });
       });
 
@@ -125,19 +125,19 @@ describe('Transaction APIs test suite', function () {
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId
           });
-          const expectedOutput = `https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}&apikey=${fixtureAPIToken}`;
+          const expectedOutput = `https://api.etherscan.io/v2/api?chainid=1&module=proxy&action=eth_getTransactionByHash&txhash=${fixtureTransactionId}&apikey=${fixtureAPIToken}`;
           expect(output).toBe(expectedOutput);
         });
       });
 
       describe('and there are no parameters in the URL yet', function () {
         it('should construct the URL to add the token with ?', function () {
-          fixtureApi.serviceURL = 'https://api.etherscan.io/api';
+          fixtureApi.serviceURL = 'https://api.etherscan.io/v2/api';
           const output = buildTransactionServiceUrl({
             explorerAPI: fixtureApi,
             transactionId: fixtureTransactionId
           });
-          const expectedOutput = `https://api.etherscan.io/api?apikey=${fixtureAPIToken}`;
+          const expectedOutput = `https://api.etherscan.io/v2/api?apikey=${fixtureAPIToken}`;
           expect(output).toBe(expectedOutput);
         });
       });

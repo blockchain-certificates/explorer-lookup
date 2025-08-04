@@ -8,7 +8,7 @@ import { SupportedChains } from '../../constants/supported-chains.js';
 import { type TransactionData } from '../../models/transactionData';
 import { type ExplorerAPI, type IParsingFunctionAPI } from '../../models/explorers';
 
-const MAIN_API_BASE_URL = 'https://api.etherscan.io/api?module=proxy';
+const MAIN_API_BASE_URL = 'https://api.etherscan.io/v2/api?chainid=1&module=proxy';
 
 function getApiBaseURL (chain: SupportedChains): string {
   const testnetNameMap = {
