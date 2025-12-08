@@ -99,6 +99,7 @@ async function parsingFunction ({ jsonResponse, chain, key, keyPropertyName }: I
       response = await request({ url: requestUrl });
     } catch (err) {
       // TODO: not tested?
+      console.log('checkEtherScanConfirmations error', err);
       throw new Error('Unable to get remote hash');
     }
 
