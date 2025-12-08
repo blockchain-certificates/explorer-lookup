@@ -17,10 +17,6 @@ export type TExplorerAPIs = TDefaultExplorersPerBlockchain & {
   custom?: TExplorerFunctionsArray;
 };
 
-function cleanupExplorerAPIs (explorerAPIs: ExplorerAPI[], indexes: number[]): void {
-  indexes.forEach(index => explorerAPIs.splice(index, 1)); // remove modified explorer to avoid setting them in the custom option later
-}
-
 function validateOverwritingExplorer (explorerAPI: ExplorerAPI): boolean {
   if (explorerAPI.key && !explorerAPI.keyPropertyName) {
     throw new Error(`Property keyPropertyName is not set for ${explorerAPI.serviceName}. Cannot pass the key property to the service.`);
@@ -28,39 +24,55 @@ function validateOverwritingExplorer (explorerAPI: ExplorerAPI): boolean {
   return true;
 }
 
-const overwrittenIndexes: number[] = [];
+export function overwriteDefaultExplorers(
+    explorerAPIs = [],
+    defaultExplorers = []
+) {
+  // Keep only custom explorers that have a valid serviceName and exist in TRANSACTION_APIS
+  const validCustomExplorers = explorerAPIs.filter(
+      explorer =>
+          explorer &&
+          explorer.serviceName &&
+          TRANSACTION_APIS[explorer.serviceName]
+  );
 
-export function overwriteDefaultExplorers (explorerAPIs: ExplorerAPI[] = [], defaultExplorers: ExplorerAPI[] = [], lastSetOfExplorers = false): ExplorerAPI[] {
-  const userSetExplorerAPIsName = explorerAPIs
-    .map(explorerAPI => explorerAPI.serviceName)
-    .filter(name => !!name)
-    .filter(name => !!TRANSACTION_APIS[name]);
-
-  if (userSetExplorerAPIsName.length) {
-    return defaultExplorers.reduce((overwrittenExplorers, defaultExplorerAPI) => {
-      if (userSetExplorerAPIsName.includes(defaultExplorerAPI.serviceName)) {
-        const immutableExplorerAPI = Object.assign({}, defaultExplorerAPI);
-        const customSetExplorerAPI = explorerAPIs.find(customExplorerAPI => customExplorerAPI.serviceName === defaultExplorerAPI.serviceName);
-        if (validateOverwritingExplorer(customSetExplorerAPI)) {
-          const overwrittenExplorerAPI = Object.assign(immutableExplorerAPI, customSetExplorerAPI);
-          overwrittenExplorers.push(overwrittenExplorerAPI);
-          const explorerAPIsIndex = explorerAPIs.findIndex(explorerAPI => explorerAPI.serviceName === overwrittenExplorerAPI.serviceName);
-          if (!overwrittenIndexes.includes(explorerAPIsIndex)) {
-            overwrittenIndexes.push(explorerAPIsIndex);
-          }
-        }
-      } else {
-        overwrittenExplorers.push(defaultExplorerAPI);
-      }
-      if (lastSetOfExplorers) {
-        cleanupExplorerAPIs(explorerAPIs, overwrittenIndexes);
-      }
-      return overwrittenExplorers;
-    }, []);
+  if (!validCustomExplorers.length) {
+    return defaultExplorers;
   }
 
-  return defaultExplorers;
+  return defaultExplorers.map(defaultExplorer => {
+    const customIndex = validCustomExplorers.findIndex(
+        custom => custom.serviceName === defaultExplorer.serviceName
+    );
+
+    if (customIndex === -1) {
+      // No custom override for this default
+      return defaultExplorer;
+    }
+
+    const customExplorer = validCustomExplorers[customIndex];
+
+    if (!validateOverwritingExplorer(customExplorer)) {
+      // Invalid override, keep default
+      return defaultExplorer;
+    }
+
+    // Remove the source from the original explorerAPIs array immediately
+    const originalIndex = explorerAPIs.findIndex(
+        explorer => explorer && explorer.serviceName === customExplorer.serviceName
+    );
+    if (originalIndex > -1) {
+      explorerAPIs.splice(originalIndex, 1);
+    }
+
+    // Also remove from the local validCustomExplorers cache so we do not reuse it
+    validCustomExplorers.splice(customIndex, 1);
+
+    // Return an overwritten copy
+    return Object.assign({}, defaultExplorer, customExplorer);
+  });
 }
+
 
 export function getDefaultExplorers (explorerAPIs?: ExplorerAPI[]): TDefaultExplorersPerBlockchain {
   return {

@@ -1,6 +1,5 @@
 import { BLOCKCHAINS } from './constants/blockchains.js';
 import CONFIG from './constants/config.js';
-import PromiseProperRace from './helpers/promiseProperRace.js';
 import { SupportedChains } from './constants/supported-chains.js';
 import { prepareExplorerAPIs, type TExplorerAPIs } from './explorers/index.js';
 import { type TransactionData } from './models/transactionData';
@@ -27,30 +26,51 @@ export function getExplorersByChain (chain: SupportedChains, explorerAPIs: TExpl
   }
 }
 
-async function runPromiseRace (promises): Promise<TransactionData> {
-  let winners;
-  try {
-    winners = await PromiseProperRace(promises, CONFIG.MinimumBlockchainExplorers);
-  } catch (err) {
-    throw new Error(`Transaction lookup error: ${err.message as string}`);
-  }
-
-  if (!winners || winners.length === 0) {
-    throw new Error('Could not confirm transaction data.');
-  }
-
-  const firstResponse = winners[0];
-  for (let i = 1; i < winners.length; i++) {
-    const thisResponse = winners[i];
-    if (firstResponse.issuingAddress !== thisResponse.issuingAddress) {
-      throw new Error('Issuing addresses do not match consistently');
+export async function runPromiseRace(
+    promises: Array<Promise<TransactionData>>
+): Promise<TransactionData> {
+  return new Promise((resolve, reject) => {
+    if (!promises.length) {
+      reject(new Error('No explorers configured'));
+      return;
     }
-    if (firstResponse.remoteHash !== thisResponse.remoteHash) {
-      throw new Error('Remote hashes do not match consistently');
+
+    let pending = promises.length;
+    let resolved = false;
+
+    const markFailure = () => {
+      pending -= 1;
+      if (!resolved && pending === 0) {
+        reject(new Error('Could not confirm transaction data.'));
+      }
+    };
+
+    const isValidResponse = (res: TransactionData | undefined | null): res is TransactionData => {
+      return !!res && !!res.issuingAddress && !!res.remoteHash;
+    };
+
+    for (const p of promises) {
+      p.then(res => {
+        if (resolved) return;
+
+        if (!isValidResponse(res)) {
+          markFailure();
+          return;
+        }
+
+        // First valid answer wins
+        resolved = true;
+        resolve(res);
+      })
+      .catch(() => {
+        // HTTP errors, thrown errors, etc.
+        if (resolved) return;
+        markFailure();
+      });
     }
-  }
-  return firstResponse;
+  });
 }
+
 
 type PromiseRaceQueue = TExplorerFunctionsArray[];
 

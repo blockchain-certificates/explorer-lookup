@@ -37,6 +37,7 @@ export async function getTransactionFromApi (
       ...explorerAPI
     });
   } catch (err) {
+    console.log('getTransactionFromApi error', err);
     throw new Error('Unable to get remote hash');
   }
 }
