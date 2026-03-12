@@ -30,6 +30,7 @@ export async function getTransactionFromApi (
   });
 
   try {
+    console.log('calling getTransactionFromApi url:', requestUrl);
     const response = await request({ url: requestUrl });
     return await explorerAPI.parsingFunction({
       jsonResponse: JSON.parse(response),

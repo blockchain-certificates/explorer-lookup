@@ -1,75 +1,58 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import request from '../../src/services/request';
 
-function MockXMLHttpRequestFactory({ isSuccessCase }: { isSuccessCase: boolean }): any {
-  return class MockXMLHttpRequest {
-    public status: number;
-    public responseText: string;
-    public headers: any = {};
-    public headersCase: any = {};
-
-    open(method: string, url: string): any {}
-    send(): any {
-      if (isSuccessCase) {
-        this.onloadSuccess();
-      } else {
-        this.onloadFailure();
-      }
-    }
-
-    onloadFailure(): void {
-      this.status = 500;
-      this.responseText = 'failure test case';
-      this.onload();
-    }
-
-    onloadSuccess(): void {
-      this.status = 200;
-      this.responseText = 'success';
-      this.onload();
-    }
-
-    onload(): any {}
-
-    setRequestHeader(name: string, value: string): any {}
-  };
+function createFetchResponse({
+  ok,
+  status,
+  responseText
+}: {
+  ok: boolean;
+  status: number;
+  responseText: string;
+}): Response {
+  return {
+    ok,
+    status,
+    text: vi.fn().mockResolvedValue(responseText)
+  } as unknown as Response;
 }
 
 describe('Services Request test suite', function () {
-  let globalXhr;
-  const MockXMLHttpRequestSuccess = MockXMLHttpRequestFactory({ isSuccessCase: true });
-  const MockXMLHttpRequestFailure = MockXMLHttpRequestFactory({ isSuccessCase: false });
+  const originalFetch = global.fetch;
 
   beforeEach(function () {
-    globalXhr = global.XMLHttpRequest;
-    (global.XMLHttpRequest as any) = MockXMLHttpRequestSuccess;
+    global.fetch = vi.fn().mockResolvedValue(
+      createFetchResponse({
+        ok: true,
+        status: 200,
+        responseText: 'success'
+      })
+    );
   });
 
   afterEach(function () {
     vi.restoreAllMocks();
-    global.XMLHttpRequest = globalXhr;
+    global.fetch = originalFetch;
   });
 
   describe('given it is called without a URL', function () {
     it('should throw an error', async function () {
-      await request({} as any).catch(err => {
-        expect(err.message).toBe('URL is missing');
-      });
+      await expect(request({} as any)).rejects.toThrow('URL is missing');
     });
   });
 
   describe('given the URL is HTTP', function () {
-    let openStub;
-
-    beforeEach(function () {
-      openStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'open');
-    });
-
     it('should upgrade the protocol to HTTPS', async function () {
       await request({
         url: 'http://www.test.com'
       });
-      expect(openStub).toHaveBeenCalledWith('GET', 'https://www.test.com');
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://www.test.com',
+        expect.objectContaining({
+          method: 'GET'
+        })
+      );
     });
 
     describe('and the forceHttp flag is true', function () {
@@ -78,36 +61,49 @@ describe('Services Request test suite', function () {
           url: 'http://www.test.com',
           forceHttp: true
         });
-        expect(openStub).toHaveBeenCalledWith('GET', 'http://www.test.com');
+
+        expect(global.fetch).toHaveBeenCalledWith(
+          'http://www.test.com',
+          expect.objectContaining({
+            method: 'GET'
+          })
+        );
       });
     });
   });
 
   describe('given a bearer token option is passed', function () {
     it('should set the header with the bearer token value', async function () {
-      const setRequestHeaderStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'setRequestHeader');
       await request({
         url: 'https://www.test.com',
         'bearer-token': 'my-bearer-token'
       });
-      expect(setRequestHeaderStub).toHaveBeenCalledWith('Authorization', 'Bearer my-bearer-token');
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://www.test.com',
+        expect.objectContaining({
+          headers: {
+            Authorization: 'Bearer my-bearer-token'
+          }
+        })
+      );
     });
   });
 
   describe('method option', function () {
-    let openStub;
-
-    beforeEach(function () {
-      openStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'open');
-    });
-
     describe('given a method option is passed', function () {
       it('should use the method to make the call', async function () {
         await request({
           url: 'https://www.test.com',
           method: 'POST'
         });
-        expect(openStub).toHaveBeenCalledWith('POST', 'https://www.test.com');
+
+        expect(global.fetch).toHaveBeenCalledWith(
+          'https://www.test.com',
+          expect.objectContaining({
+            method: 'POST'
+          })
+        );
       });
     });
 
@@ -116,64 +112,99 @@ describe('Services Request test suite', function () {
         await request({
           url: 'https://www.test.com'
         });
-        expect(openStub).toHaveBeenCalledWith('GET', 'https://www.test.com');
+
+        expect(global.fetch).toHaveBeenCalledWith(
+          'https://www.test.com',
+          expect.objectContaining({
+            method: 'GET'
+          })
+        );
       });
     });
   });
 
   describe('body option', function () {
-  let sendStub;
+    describe('given the body option is set', function () {
+      it('should send the body as JSON and set the content type header', async function () {
+        const body = {
+          test: true
+        };
 
-  beforeEach(function () {
-    sendStub = vi.spyOn(MockXMLHttpRequestSuccess.prototype, 'send').mockImplementation(function () {
-      // Simulate the request lifecycle by triggering the onload callback
-      this.status = 200; // Simulate a successful response
-      this.responseText = 'success'; // Simulate a response body
-      this.onload();
-    });
-  });
+        await request({
+          url: 'https://www.test.com',
+          body
+        });
 
-  describe('given the body option is set', function () {
-    it('should send the body', async function () {
-      const body = {
-        test: true
-      };
-      await request({
-        url: 'https://www.test.com',
-        body
+        expect(global.fetch).toHaveBeenCalledWith(
+          'https://www.test.com',
+          expect.objectContaining({
+            method: 'GET',
+            body: JSON.stringify(body),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+        );
       });
-      expect(sendStub).toHaveBeenCalledWith(JSON.stringify(body));
     });
-  });
 
-  describe('given the body option is not set', function () {
-    it('should send nothing', async function () {
-      await request({
-        url: 'https://www.test.com'
+    describe('given the body option is not set', function () {
+      it('should send no body', async function () {
+        await request({
+          url: 'https://www.test.com'
+        });
+
+        expect(global.fetch).toHaveBeenCalledWith(
+          'https://www.test.com',
+          expect.objectContaining({
+            method: 'GET',
+            body: undefined
+          })
+        );
       });
-      expect(sendStub).toHaveBeenCalledWith();
     });
   });
-});
 
-  describe('onload method', function () {
+  describe('response handling', function () {
     describe('given the response status is 2xx', function () {
-      it('should resolve the responseText', async function () {
+      it('should resolve the response text', async function () {
         const response = await request({
           url: 'https://www.test.com'
         });
+
         expect(response).toBe('success');
       });
     });
 
     describe('given the response status is not 2xx', function () {
       it('should reject the request with the error code', async function () {
-        (global.XMLHttpRequest as any) = MockXMLHttpRequestFailure;
-        await expect(async () => {
-          await request({
+        global.fetch = vi.fn().mockResolvedValue(
+          createFetchResponse({
+            ok: false,
+            status: 500,
+            responseText: 'failure test case'
+          })
+        );
+
+        await expect(
+          request({
             url: 'https://www.test.com'
-          });
-        }).rejects.toEqual(new Error('Error fetching url:https://www.test.com; status code:500'));
+          })
+        ).rejects.toEqual(
+          new Error('Error fetching url:https://www.test.com; status code:500')
+        );
+      });
+    });
+
+    describe('given fetch rejects', function () {
+      it('should reject with the fetch error message', async function () {
+        global.fetch = vi.fn().mockRejectedValue(new Error('network failure'));
+
+        await expect(
+          request({
+            url: 'https://www.test.com'
+          })
+        ).rejects.toEqual(new Error('network failure'));
       });
     });
   });

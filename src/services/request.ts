@@ -1,5 +1,3 @@
-import { XMLHttpRequest as xhrPolyfill } from 'xmlhttprequest';
-
 export interface IRequestParameters {
   url: string;
   method?: 'GET' | 'POST';
@@ -8,58 +6,54 @@ export interface IRequestParameters {
   'bearer-token'?: string;
 }
 
-export default async function request (obj: IRequestParameters): Promise<any> {
-  return await new Promise((resolve, reject) => {
-    let { url } = obj;
+export default async function request(parameters: IRequestParameters): Promise<any> {
+  let { url } = parameters;
 
-    if (!url) {
-      reject(new Error('URL is missing'));
-    }
+  if (!url) {
+    throw new Error('URL is missing');
+  }
 
-    if (url.substr(0, 7) === 'http://' && !obj.forceHttp) {
-      console.warn(`Upgrading requested url ${url} to https protocol.`);
-      url = url.replace('http://', 'https://');
-    }
+  if (url.startsWith('http://') && !parameters.forceHttp) {
+    console.warn(`Upgrading requested url ${url} to https protocol.`);
+    url = url.replace('http://', 'https://');
+  }
 
-    // server
-    const XHR = typeof XMLHttpRequest === 'undefined' ? xhrPolyfill : XMLHttpRequest;
-    const request: XMLHttpRequest = new XHR();
+  const headers: Record<string, string> = {};
 
-    if (obj['bearer-token']) {
-      request.setRequestHeader('Authorization', `Bearer ${obj['bearer-token']}`);
-    }
+  if (parameters['bearer-token']) {
+    headers['Authorization'] = `Bearer ${parameters['bearer-token']}`;
+  }
 
-    request.onload = () => {
-      if (request.status >= 200 && request.status < 300) {
-        resolve(request.responseText);
-      } else {
-        console.log(request.responseText);
-        const failureMessage: string = `Error fetching url:${url}; status code:${request.status}`;
-        reject(new Error(failureMessage));
-      }
-    };
+  let requestBody: string | undefined;
 
-    request.ontimeout = (e) => {
-      console.log('ontimeout', e);
-    };
+  if (parameters.body) {
+    requestBody = JSON.stringify(parameters.body);
+    headers['Content-Type'] = 'application/json';
+  }
 
-    request.onreadystatechange = () => {
-      if (request.status === 404) {
-        reject(new Error(`Error fetching url:${url}; status code:${request.status}`));
-      }
-    };
+  let response: Response;
 
-    request.onerror = () => {
-      console.error(`Request failed with error ${request.responseText}`);
-      reject(new Error(request.responseText));
-    };
+  try {
+    response = await fetch(url, {
+      method: parameters.method ?? 'GET',
+      headers,
+      body: requestBody
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown network error';
 
-    request.open(obj.method ?? 'GET', url);
+    console.error(`Request failed with error ${errorMessage}`);
+    throw new Error(errorMessage);
+  }
 
-    if (obj.body) {
-      request.send(JSON.stringify(obj.body));
-    } else {
-      request.send();
-    }
-  });
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    console.log(responseText);
+    const failureMessage = `Error fetching url:${url}; status code:${response.status}`;
+    throw new Error(failureMessage);
+  }
+
+  return responseText;
 }
