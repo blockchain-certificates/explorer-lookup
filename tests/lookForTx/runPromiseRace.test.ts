@@ -16,12 +16,9 @@ describe('runPromiseRace test suite', function () {
         revokedAddresses: [],
     }
 
-    it('fails when no promises were created', function () {
+    it('fails when no promises were created', async function () {
         const racePromise = runPromiseRace([]);
-        expect(async function () {
-            await racePromise;
-        }).rejects.toThrow('No explorers configured');
-
+        await expect(racePromise).rejects.toThrow('No explorers configured');
     });
 
     it('resolves as soon as the first valid response is returned', async function () {
@@ -87,8 +84,6 @@ describe('runPromiseRace test suite', function () {
 
         resolveSlow(invalidTx);
 
-        expect(async function () {
-            await racePromise;
-        }).rejects.toThrow('Could not confirm transaction data.');
+        await expect(racePromise).rejects.toThrow('Could not confirm transaction data.');
     });
 });
